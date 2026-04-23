@@ -1,20 +1,24 @@
-import type {AnimeDetails} from "@/types/anime.type"
-import {api} from "../utils/axios.config"
+import type {AnimeDetails, AnimeInfo} from "@/types/anime.type"
+import {api} from "../utils/axios.config.util"
+import {animeResponseMap, animeResponsesMap} from "@/utils/response-map.util"
 
-export const getFeaturedAnime = async (): Promise<AnimeDetails[]> => {
+export const getFeaturedAnimeAsync = async (): Promise<AnimeDetails[]> => {
     try {
         const {
             data: {AniData},
         } = await api.get("/featured")
 
-        return AniData.map((anime: any) => ({
-            _id: anime._id,
-            name: anime.Name,
-            imagePath: anime.ImagePath,
-            malScore: Number(anime.MALScore),
-            ratingNumber: anime.RatingsNum,
-            description: anime.DescripTion,
-        }))
+        return animeResponsesMap(AniData)
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
+
+export const getAnimeByIdAsync = async (id: number): Promise<AnimeInfo> => {
+    try {
+        const {data} = await api.get(`/${id}`)
+        return animeResponseMap(data)
     } catch (error) {
         console.log(error)
         throw error

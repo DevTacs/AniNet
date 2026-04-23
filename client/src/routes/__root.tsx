@@ -13,11 +13,26 @@ function RootComponent() {
                     Ani<span className="text-accent">Net</span>
                 </span>
                 <nav className=" flex gap-10 justify-end">
-                    <Link to="/anime" className="text-accent">
-                        Anime
+                    <Link
+                        to="/anime/featured-anime"
+                        className="text-accent"
+                        activeProps={{
+                            className:
+                                "text-foreground font-bold border-b-2 border-accent",
+                        }}
+                        activeOptions={{exact: true}}>
+                        Featured Anime
                     </Link>
-                    <Link to="/anime" className="text-foreground">
-                        Manga
+
+                    <Link
+                        to="/anime"
+                        className="text-accent"
+                        activeProps={{
+                            className:
+                                "text-foreground font-bold border-b-2 border-accent",
+                        }}
+                        activeOptions={{exact: true}}>
+                        All Anime
                     </Link>
                 </nav>
             </div>

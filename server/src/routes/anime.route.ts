@@ -1,8 +1,11 @@
 import express, {type Request, type Response} from "express"
-import {getTopRatedAnime} from "../controllers/anime.controller.js"
+import {
+    getAnimeByIdAsync,
+    getTopRatedAnimeAsync,
+} from "../controllers/anime.controller.js"
 
 const router = express.Router()
 
-router.get("/featured", getTopRatedAnime)
-
+router.get("/featured", getTopRatedAnimeAsync)
+router.get("/:id", getAnimeByIdAsync)
 export default router
