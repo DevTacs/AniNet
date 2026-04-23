@@ -9,27 +9,51 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AnimeIndexRouteImport } from './routes/anime/index'
 
-export interface FileRoutesByFullPath {}
-export interface FileRoutesByTo {}
+const AnimeIndexRoute = AnimeIndexRouteImport.update({
+  id: '/anime/',
+  path: '/anime/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+
+export interface FileRoutesByFullPath {
+  '/anime/': typeof AnimeIndexRoute
+}
+export interface FileRoutesByTo {
+  '/anime': typeof AnimeIndexRoute
+}
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/anime/': typeof AnimeIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: never
+  fullPaths: '/anime/'
   fileRoutesByTo: FileRoutesByTo
-  to: never
-  id: '__root__'
+  to: '/anime'
+  id: '__root__' | '/anime/'
   fileRoutesById: FileRoutesById
 }
-export interface RootRouteChildren {}
-
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {}
+export interface RootRouteChildren {
+  AnimeIndexRoute: typeof AnimeIndexRoute
 }
 
-const rootRouteChildren: RootRouteChildren = {}
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/anime/': {
+      id: '/anime/'
+      path: '/anime'
+      fullPath: '/anime/'
+      preLoaderRoute: typeof AnimeIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+  }
+}
+
+const rootRouteChildren: RootRouteChildren = {
+  AnimeIndexRoute: AnimeIndexRoute,
+}
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()

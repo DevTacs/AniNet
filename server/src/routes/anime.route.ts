@@ -3,6 +3,6 @@ import {getTopRatedAnime} from "../controllers/anime.controller.js"
 
 const router = express.Router()
 
-router.get("/top-rated", getTopRatedAnime)
+router.get("/featured", getTopRatedAnime)
 
 export default router
