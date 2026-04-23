@@ -1,4 +1,4 @@
-import type {AnimeDetails, AnimeInfo} from "@/types/anime.type"
+import type {AnimeDetails, AnimeEpisode, AnimeInfo} from "@/types/anime.type"
 import {api} from "../utils/axios.config.util"
 import {animeResponseMap, animeResponsesMap} from "@/utils/response-map.util"
 
@@ -19,6 +19,20 @@ export const getAnimeByIdAsync = async (id: number): Promise<AnimeInfo> => {
     try {
         const {data} = await api.get(`/${id}`)
         return animeResponseMap(data)
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
+
+export const getEpisodesByIdAsync = async (
+    id: number,
+): Promise<AnimeEpisode[]> => {
+    try {
+        const {
+            data: {episodes},
+        } = await api.get(`/${id}/episodes`)
+        return episodes
     } catch (error) {
         console.log(error)
         throw error

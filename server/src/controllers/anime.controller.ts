@@ -1,5 +1,5 @@
 import {type Request, type Response} from "express"
-import {getInfo, getTopRated} from "anipub"
+import {getInfo, getStreamingLinks, getTopRated} from "anipub"
 
 export const getTopRatedAnimeAsync = async (req: Request, res: Response) => {
     try {
@@ -28,5 +28,19 @@ export const getAnimeByIdAsync = async (
         res.status(500).json({
             error: "An error occurred while fetching anime details.",
         })
+    }
+}
+
+export const getEpisodesByIdAsync = async (
+    req: Request<{id: number}>,
+    res: Response,
+) => {
+    try {
+        const id = Number(req.params.id)
+        const episodes = await getStreamingLinks(id)
+        res.json(episodes)
+    } catch (error) {
+        console.log(error)
+        throw error
     }
 }

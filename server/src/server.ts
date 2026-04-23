@@ -16,7 +16,7 @@ app.get("/episodes", async (req: express.Request, res: express.Response) => {
     const animes = data.map(({_id, Name}) => ({_id, Name}))
 
     const test = await findByGenre("action")
-    res.json(test)
+    res.json(episodes)
 })
 
 app.listen(port, () => {

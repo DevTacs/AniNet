@@ -53,3 +53,8 @@ export type AnimeInfo = {
     epCount: number
     finder?: string
 }
+
+export type AnimeEpisode = {
+    ep: number
+    src: string
+}
