@@ -2,7 +2,7 @@ import {getAnimeByIdAsync, getEpisodesByIdAsync} from "@/services/anime.service"
 import type {AnimeEpisode, AnimeInfo} from "@/types/anime.type"
 import {useQuery} from "@tanstack/react-query"
 import {createFileRoute} from "@tanstack/react-router"
-import {useState} from "react"
+import {useEffect, useState} from "react"
 
 export const Route = createFileRoute("/anime/$id")({
     component: RouteComponent,
@@ -22,6 +22,12 @@ function RouteComponent() {
         queryKey: ["anime", id, "episodes"],
         queryFn: () => getEpisodesByIdAsync(Number(id)),
     })
+
+    useEffect(() => {
+        if (episodeData && episodeData.length > 0) {
+            setSelectedEpisode(episodeData[0].src)
+        }
+    }, [id, episodeData])
 
     return (
         <div className="min-h-screen bg-background px-6 py-10 flex flex-col items-center justify-center">
