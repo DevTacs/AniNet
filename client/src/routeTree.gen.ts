@@ -9,13 +9,19 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AnimeRouteRouteImport } from './routes/anime/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TestIndexRouteImport } from './routes/test/index'
 import { Route as AnimeIndexRouteImport } from './routes/anime/index'
 import { Route as AnimeFeaturedAnimeRouteImport } from './routes/anime/featured-anime'
-import { Route as AnimeAllRouteImport } from './routes/anime/all'
+import { Route as AnimeBookmarkRouteImport } from './routes/anime/bookmark'
 import { Route as AnimeWatchIdRouteImport } from './routes/anime/watch/$id'
 
+const AnimeRouteRoute = AnimeRouteRouteImport.update({
+  id: '/anime',
+  path: '/anime',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -27,29 +33,30 @@ const TestIndexRoute = TestIndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const AnimeIndexRoute = AnimeIndexRouteImport.update({
-  id: '/anime/',
-  path: '/anime/',
-  getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => AnimeRouteRoute,
 } as any)
 const AnimeFeaturedAnimeRoute = AnimeFeaturedAnimeRouteImport.update({
-  id: '/anime/featured-anime',
-  path: '/anime/featured-anime',
-  getParentRoute: () => rootRouteImport,
+  id: '/featured-anime',
+  path: '/featured-anime',
+  getParentRoute: () => AnimeRouteRoute,
 } as any)
-const AnimeAllRoute = AnimeAllRouteImport.update({
-  id: '/anime/all',
-  path: '/anime/all',
-  getParentRoute: () => rootRouteImport,
+const AnimeBookmarkRoute = AnimeBookmarkRouteImport.update({
+  id: '/bookmark',
+  path: '/bookmark',
+  getParentRoute: () => AnimeRouteRoute,
 } as any)
 const AnimeWatchIdRoute = AnimeWatchIdRouteImport.update({
-  id: '/anime/watch/$id',
-  path: '/anime/watch/$id',
-  getParentRoute: () => rootRouteImport,
+  id: '/watch/$id',
+  path: '/watch/$id',
+  getParentRoute: () => AnimeRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/anime/all': typeof AnimeAllRoute
+  '/anime': typeof AnimeRouteRouteWithChildren
+  '/anime/bookmark': typeof AnimeBookmarkRoute
   '/anime/featured-anime': typeof AnimeFeaturedAnimeRoute
   '/anime/': typeof AnimeIndexRoute
   '/test/': typeof TestIndexRoute
@@ -57,7 +64,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/anime/all': typeof AnimeAllRoute
+  '/anime/bookmark': typeof AnimeBookmarkRoute
   '/anime/featured-anime': typeof AnimeFeaturedAnimeRoute
   '/anime': typeof AnimeIndexRoute
   '/test': typeof TestIndexRoute
@@ -66,7 +73,8 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/anime/all': typeof AnimeAllRoute
+  '/anime': typeof AnimeRouteRouteWithChildren
+  '/anime/bookmark': typeof AnimeBookmarkRoute
   '/anime/featured-anime': typeof AnimeFeaturedAnimeRoute
   '/anime/': typeof AnimeIndexRoute
   '/test/': typeof TestIndexRoute
@@ -76,7 +84,8 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/anime/all'
+    | '/anime'
+    | '/anime/bookmark'
     | '/anime/featured-anime'
     | '/anime/'
     | '/test/'
@@ -84,7 +93,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/anime/all'
+    | '/anime/bookmark'
     | '/anime/featured-anime'
     | '/anime'
     | '/test'
@@ -92,7 +101,8 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/anime/all'
+    | '/anime'
+    | '/anime/bookmark'
     | '/anime/featured-anime'
     | '/anime/'
     | '/test/'
@@ -101,15 +111,19 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AnimeAllRoute: typeof AnimeAllRoute
-  AnimeFeaturedAnimeRoute: typeof AnimeFeaturedAnimeRoute
-  AnimeIndexRoute: typeof AnimeIndexRoute
+  AnimeRouteRoute: typeof AnimeRouteRouteWithChildren
   TestIndexRoute: typeof TestIndexRoute
-  AnimeWatchIdRoute: typeof AnimeWatchIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/anime': {
+      id: '/anime'
+      path: '/anime'
+      fullPath: '/anime'
+      preLoaderRoute: typeof AnimeRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -126,42 +140,57 @@ declare module '@tanstack/react-router' {
     }
     '/anime/': {
       id: '/anime/'
-      path: '/anime'
+      path: '/'
       fullPath: '/anime/'
       preLoaderRoute: typeof AnimeIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AnimeRouteRoute
     }
     '/anime/featured-anime': {
       id: '/anime/featured-anime'
-      path: '/anime/featured-anime'
+      path: '/featured-anime'
       fullPath: '/anime/featured-anime'
       preLoaderRoute: typeof AnimeFeaturedAnimeRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AnimeRouteRoute
     }
-    '/anime/all': {
-      id: '/anime/all'
-      path: '/anime/all'
-      fullPath: '/anime/all'
-      preLoaderRoute: typeof AnimeAllRouteImport
-      parentRoute: typeof rootRouteImport
+    '/anime/bookmark': {
+      id: '/anime/bookmark'
+      path: '/bookmark'
+      fullPath: '/anime/bookmark'
+      preLoaderRoute: typeof AnimeBookmarkRouteImport
+      parentRoute: typeof AnimeRouteRoute
     }
     '/anime/watch/$id': {
       id: '/anime/watch/$id'
-      path: '/anime/watch/$id'
+      path: '/watch/$id'
       fullPath: '/anime/watch/$id'
       preLoaderRoute: typeof AnimeWatchIdRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AnimeRouteRoute
     }
   }
 }
 
-const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  AnimeAllRoute: AnimeAllRoute,
+interface AnimeRouteRouteChildren {
+  AnimeBookmarkRoute: typeof AnimeBookmarkRoute
+  AnimeFeaturedAnimeRoute: typeof AnimeFeaturedAnimeRoute
+  AnimeIndexRoute: typeof AnimeIndexRoute
+  AnimeWatchIdRoute: typeof AnimeWatchIdRoute
+}
+
+const AnimeRouteRouteChildren: AnimeRouteRouteChildren = {
+  AnimeBookmarkRoute: AnimeBookmarkRoute,
   AnimeFeaturedAnimeRoute: AnimeFeaturedAnimeRoute,
   AnimeIndexRoute: AnimeIndexRoute,
-  TestIndexRoute: TestIndexRoute,
   AnimeWatchIdRoute: AnimeWatchIdRoute,
+}
+
+const AnimeRouteRouteWithChildren = AnimeRouteRoute._addFileChildren(
+  AnimeRouteRouteChildren,
+)
+
+const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
+  AnimeRouteRoute: AnimeRouteRouteWithChildren,
+  TestIndexRoute: TestIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

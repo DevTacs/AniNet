@@ -9,7 +9,7 @@ import {
 import {useNavigate, createFileRoute} from "@tanstack/react-router"
 import {useState} from "react"
 
-export const Route = createFileRoute("/anime/all")({
+export const Route = createFileRoute("/anime/bookmark")({
     component: RouteComponent,
 })
 
