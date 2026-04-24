@@ -1,16 +1,22 @@
 import express from "express"
 import cors from "cors"
-import animeRoutes from "./routes/anime.route.js"
-import dotenv from "dotenv"
-
 const app = express()
-dotenv.config()
 
 const port = process.env.PORT
 
-app.use(cors())
+app.use(
+    cors({
+        origin: process.env.CLIENT_URL,
+        credentials: true,
+    }),
+)
 app.use(express.json())
 
+import "./configs/passport.config.js"
+import authRoutes from "./routes/auth.route.js"
+import animeRoutes from "./routes/anime.route.js"
+
+app.use("/auth", authRoutes)
 app.use("/api/anime", animeRoutes)
 
 app.listen(port, () => {

@@ -1,5 +1,5 @@
+import {api} from "@/configs/axios.config"
 import type {AnimeDetails, AnimeEpisode, AnimeInfo} from "@/types/anime.type"
-import {api} from "../utils/axios.config.util"
 import {animeResponseMap, animeResponsesMap} from "@/utils/response-map.util"
 
 export const getFeaturedAnimeAsync = async (): Promise<AnimeDetails[]> => {

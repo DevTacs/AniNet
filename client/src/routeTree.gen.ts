@@ -9,10 +9,16 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TestIndexRouteImport } from './routes/test/index'
 import { Route as AnimeIndexRouteImport } from './routes/anime/index'
 import { Route as AnimeFeaturedAnimeRouteImport } from './routes/anime/featured-anime'
 import { Route as AnimeIdRouteImport } from './routes/anime/$id'
 
+const TestIndexRoute = TestIndexRouteImport.update({
+  id: '/test/',
+  path: '/test/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AnimeIndexRoute = AnimeIndexRouteImport.update({
   id: '/anime/',
   path: '/anime/',
@@ -33,34 +39,45 @@ export interface FileRoutesByFullPath {
   '/anime/$id': typeof AnimeIdRoute
   '/anime/featured-anime': typeof AnimeFeaturedAnimeRoute
   '/anime/': typeof AnimeIndexRoute
+  '/test/': typeof TestIndexRoute
 }
 export interface FileRoutesByTo {
   '/anime/$id': typeof AnimeIdRoute
   '/anime/featured-anime': typeof AnimeFeaturedAnimeRoute
   '/anime': typeof AnimeIndexRoute
+  '/test': typeof TestIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/anime/$id': typeof AnimeIdRoute
   '/anime/featured-anime': typeof AnimeFeaturedAnimeRoute
   '/anime/': typeof AnimeIndexRoute
+  '/test/': typeof TestIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/anime/$id' | '/anime/featured-anime' | '/anime/'
+  fullPaths: '/anime/$id' | '/anime/featured-anime' | '/anime/' | '/test/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/anime/$id' | '/anime/featured-anime' | '/anime'
-  id: '__root__' | '/anime/$id' | '/anime/featured-anime' | '/anime/'
+  to: '/anime/$id' | '/anime/featured-anime' | '/anime' | '/test'
+  id: '__root__' | '/anime/$id' | '/anime/featured-anime' | '/anime/' | '/test/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AnimeIdRoute: typeof AnimeIdRoute
   AnimeFeaturedAnimeRoute: typeof AnimeFeaturedAnimeRoute
   AnimeIndexRoute: typeof AnimeIndexRoute
+  TestIndexRoute: typeof TestIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/test/': {
+      id: '/test/'
+      path: '/test'
+      fullPath: '/test/'
+      preLoaderRoute: typeof TestIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/anime/': {
       id: '/anime/'
       path: '/anime'
@@ -89,6 +106,7 @@ const rootRouteChildren: RootRouteChildren = {
   AnimeIdRoute: AnimeIdRoute,
   AnimeFeaturedAnimeRoute: AnimeFeaturedAnimeRoute,
   AnimeIndexRoute: AnimeIndexRoute,
+  TestIndexRoute: TestIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
