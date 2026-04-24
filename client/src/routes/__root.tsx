@@ -38,6 +38,19 @@ function RootComponent() {
                         activeOptions={{exact: true}}>
                         All Anime
                     </Link>
+                    {isLoggedIn ? (
+                        <Link
+                            to="/anime"
+                            className="text-accent"
+                            activeProps={{
+                                className:
+                                    "text-foreground font-bold border-b-2 border-accent",
+                            }}
+                            activeOptions={{exact: true}}>
+                            Bookmarks
+                        </Link>
+                    ) : null}
+
                     {!isLoggedIn ? (
                         <button className="text-foreground bg-accent px-6 rounded-md">
                             Login

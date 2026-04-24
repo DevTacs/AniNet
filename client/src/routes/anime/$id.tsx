@@ -14,6 +14,8 @@ function RouteComponent() {
         "",
     )
 
+    const [isBookmarked, setIsBookmarked] = useState(false)
+
     const {data} = useQuery<AnimeInfo>({
         queryKey: ["anime", id],
         queryFn: () => getAnimeByIdAsync(Number(id)),
@@ -80,6 +82,15 @@ function RouteComponent() {
                             {data?.description}
                         </p>
                     </div>
+                    <button
+                        className={`bg-accent text-foreground hover:bg-accent/80 py-2 px-4 rounded-md ${
+                            isBookmarked
+                                ? "bg-green-500 hover:bg-green-600"
+                                : ""
+                        }`}
+                        onClick={() => setIsBookmarked(!isBookmarked)}>
+                        {isBookmarked ? "Remove Bookmark" : "Bookmark"}
+                    </button>
                 </div>
 
                 {/* RIGHT: IMAGE */}
