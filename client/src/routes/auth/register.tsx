@@ -1,4 +1,4 @@
-import {createFileRoute} from "@tanstack/react-router"
+import {createFileRoute, Link} from "@tanstack/react-router"
 import {Button} from "@/components/ui/button"
 import {
     Card,
@@ -12,40 +12,46 @@ import {
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/auth/register")({
     component: RouteComponent,
 })
-
 function RouteComponent() {
-    const handleGoogleLogin = () =>
-        (window.location.href = "http://localhost:3000/auth/google")
+    const handleGoogleLogin = () => {
+        window.location.href = `${import.meta.env.VITE_SERVER_URL}/auth/google`
+    }
+
+    const handleLogin = (e: React.FormEvent) => {
+        e.preventDefault()
+        console.log("login submit")
+        // TODO: email/password login API
+    }
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-background text-foreground">
-            {/* Optional background glow */}
+        <div className="min-h-screen flex items-center justify-center bg-background text-foreground relative">
+            {/* background glow */}
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(229,9,20,0.15),transparent_60%)]" />
 
-            <Card className="relative w-full max-w-sm bg-white/5 border border-white/10 backdrop-blur-xl shadow-xl rounded-2xl">
+            <Card className="relative w-full max-w-sm bg-white/5 border border-white/10 backdrop-blur-xl rounded-2xl">
                 <CardHeader className="space-y-1">
                     <CardTitle className="text-xl font-semibold">
-                        Welcome back
+                        Create your account
                     </CardTitle>
 
                     <CardDescription className="text-foreground/60">
-                        Login to continue watching your anime
+                        Join to start watching anime
                     </CardDescription>
 
                     <CardAction>
-                        <Button
-                            variant="link"
+                        <Link
+                            to="/auth/login"
                             className="text-accent hover:text-accent/80">
-                            Sign Up
-                        </Button>
+                            Login
+                        </Link>
                     </CardAction>
                 </CardHeader>
 
                 <CardContent>
-                    <form className="space-y-5">
+                    <form onSubmit={handleLogin} className="space-y-5">
                         {/* Email */}
                         <div className="space-y-2">
                             <Label htmlFor="email">Email</Label>
@@ -53,34 +59,32 @@ function RouteComponent() {
                                 id="email"
                                 type="email"
                                 placeholder="m@example.com"
-                                required
                                 className="bg-white/5 border-white/10 focus:ring-2 focus:ring-accent"
+                                required
                             />
                         </div>
 
                         {/* Password */}
                         <div className="space-y-2">
-                            <div className="flex items-center">
-                                <Label htmlFor="password">Password</Label>
-                            </div>
-
+                            <Label htmlFor="password">Password</Label>
                             <Input
                                 id="password"
                                 type="password"
-                                required
-                                placeholder="Enter password"
+                                placeholder="Create password"
                                 className="bg-white/5 border-white/10 focus:ring-2 focus:ring-accent"
+                                required
                             />
                         </div>
+
+                        <Button
+                            type="submit"
+                            className="w-full bg-accent hover:bg-accent/80 text-white">
+                            Create
+                        </Button>
                     </form>
                 </CardContent>
 
                 <CardFooter className="flex flex-col gap-3">
-                    {/* Login */}
-                    <Button className="w-full bg-accent hover:bg-accent/80 text-white">
-                        Login
-                    </Button>
-
                     {/* Divider */}
                     <div className="flex items-center gap-2 w-full">
                         <div className="flex-1 h-px bg-white/10" />
@@ -90,6 +94,7 @@ function RouteComponent() {
 
                     {/* Google */}
                     <Button
+                        type="button"
                         onClick={handleGoogleLogin}
                         variant="outline"
                         className="w-full border-white/10 bg-white/5 hover:bg-white/10">
