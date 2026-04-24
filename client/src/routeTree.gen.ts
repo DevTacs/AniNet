@@ -13,7 +13,8 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as TestIndexRouteImport } from './routes/test/index'
 import { Route as AnimeIndexRouteImport } from './routes/anime/index'
 import { Route as AnimeFeaturedAnimeRouteImport } from './routes/anime/featured-anime'
-import { Route as AnimeIdRouteImport } from './routes/anime/$id'
+import { Route as AnimeAllRouteImport } from './routes/anime/all'
+import { Route as AnimeWatchIdRouteImport } from './routes/anime/watch/$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -35,54 +36,76 @@ const AnimeFeaturedAnimeRoute = AnimeFeaturedAnimeRouteImport.update({
   path: '/anime/featured-anime',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AnimeIdRoute = AnimeIdRouteImport.update({
-  id: '/anime/$id',
-  path: '/anime/$id',
+const AnimeAllRoute = AnimeAllRouteImport.update({
+  id: '/anime/all',
+  path: '/anime/all',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnimeWatchIdRoute = AnimeWatchIdRouteImport.update({
+  id: '/anime/watch/$id',
+  path: '/anime/watch/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/anime/$id': typeof AnimeIdRoute
+  '/anime/all': typeof AnimeAllRoute
   '/anime/featured-anime': typeof AnimeFeaturedAnimeRoute
   '/anime/': typeof AnimeIndexRoute
   '/test/': typeof TestIndexRoute
+  '/anime/watch/$id': typeof AnimeWatchIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/anime/$id': typeof AnimeIdRoute
+  '/anime/all': typeof AnimeAllRoute
   '/anime/featured-anime': typeof AnimeFeaturedAnimeRoute
   '/anime': typeof AnimeIndexRoute
   '/test': typeof TestIndexRoute
+  '/anime/watch/$id': typeof AnimeWatchIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/anime/$id': typeof AnimeIdRoute
+  '/anime/all': typeof AnimeAllRoute
   '/anime/featured-anime': typeof AnimeFeaturedAnimeRoute
   '/anime/': typeof AnimeIndexRoute
   '/test/': typeof TestIndexRoute
+  '/anime/watch/$id': typeof AnimeWatchIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/anime/$id' | '/anime/featured-anime' | '/anime/' | '/test/'
-  fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/anime/$id' | '/anime/featured-anime' | '/anime' | '/test'
-  id:
-    | '__root__'
+  fullPaths:
     | '/'
-    | '/anime/$id'
+    | '/anime/all'
     | '/anime/featured-anime'
     | '/anime/'
     | '/test/'
+    | '/anime/watch/$id'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/'
+    | '/anime/all'
+    | '/anime/featured-anime'
+    | '/anime'
+    | '/test'
+    | '/anime/watch/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/anime/all'
+    | '/anime/featured-anime'
+    | '/anime/'
+    | '/test/'
+    | '/anime/watch/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AnimeIdRoute: typeof AnimeIdRoute
+  AnimeAllRoute: typeof AnimeAllRoute
   AnimeFeaturedAnimeRoute: typeof AnimeFeaturedAnimeRoute
   AnimeIndexRoute: typeof AnimeIndexRoute
   TestIndexRoute: typeof TestIndexRoute
+  AnimeWatchIdRoute: typeof AnimeWatchIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -115,11 +138,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AnimeFeaturedAnimeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/anime/$id': {
-      id: '/anime/$id'
-      path: '/anime/$id'
-      fullPath: '/anime/$id'
-      preLoaderRoute: typeof AnimeIdRouteImport
+    '/anime/all': {
+      id: '/anime/all'
+      path: '/anime/all'
+      fullPath: '/anime/all'
+      preLoaderRoute: typeof AnimeAllRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/anime/watch/$id': {
+      id: '/anime/watch/$id'
+      path: '/anime/watch/$id'
+      fullPath: '/anime/watch/$id'
+      preLoaderRoute: typeof AnimeWatchIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -127,10 +157,11 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AnimeIdRoute: AnimeIdRoute,
+  AnimeAllRoute: AnimeAllRoute,
   AnimeFeaturedAnimeRoute: AnimeFeaturedAnimeRoute,
   AnimeIndexRoute: AnimeIndexRoute,
   TestIndexRoute: TestIndexRoute,
+  AnimeWatchIdRoute: AnimeWatchIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

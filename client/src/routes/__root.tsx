@@ -6,68 +6,77 @@ import React from "react"
 export const Route = createRootRoute({
     component: RootComponent,
 })
-
 function RootComponent() {
     const [isLoggedIn, setIsLoggedIn] = React.useState(true)
 
     return (
-        <React.Fragment>
-            <div className="hidden md:flex gap-4 justify-between bg-background py-4 px-20 border-2 border-b-foreground">
-                <span className="text-2xl text-foreground">
+        <>
+            {/* 🔝 Navbar */}
+            <header className="hidden md:flex items-center justify-between px-20 py-4 bg-background border-b border-white/10 backdrop-blur">
+                {/* Logo */}
+                <span className="text-2xl font-bold tracking-wide text-foreground">
                     Ani<span className="text-accent">Net</span>
                 </span>
-                <nav className=" flex gap-10 justify-end">
+
+                {/* Navigation */}
+                <nav className="flex items-center gap-8">
                     <Link
                         to="/anime/featured-anime"
-                        className="text-accent"
+                        className="text-sm text-foreground/70 hover:text-foreground transition"
                         activeProps={{
                             className:
-                                "text-foreground font-bold border-b-2 border-accent",
-                        }}
-                        activeOptions={{exact: true}}>
-                        Featured Anime
+                                "text-foreground font-semibold border-b-2 border-accent pb-1",
+                        }}>
+                        Featured
                     </Link>
 
                     <Link
-                        to="/anime"
-                        className="text-accent"
+                        to="/anime/all"
+                        className="text-sm text-foreground/70 hover:text-foreground transition"
                         activeProps={{
                             className:
-                                "text-foreground font-bold border-b-2 border-accent",
-                        }}
-                        activeOptions={{exact: true}}>
-                        All Anime
+                                "text-foreground font-semibold border-b-2 border-accent pb-1",
+                        }}>
+                        Browse
                     </Link>
-                    {isLoggedIn ? (
+
+                    {isLoggedIn && (
                         <Link
                             to="/anime"
-                            className="text-accent"
+                            className="text-sm text-foreground/70 hover:text-foreground transition"
                             activeProps={{
                                 className:
-                                    "text-foreground font-bold border-b-2 border-accent",
-                            }}
-                            activeOptions={{exact: true}}>
+                                    "text-foreground font-semibold border-b-2 border-accent pb-1",
+                            }}>
                             Bookmarks
                         </Link>
-                    ) : null}
+                    )}
 
-                    {!isLoggedIn ? (
-                        <button className="text-foreground bg-accent px-6 rounded-md">
-                            Login
-                        </button>
-                    ) : null}
-                    {isLoggedIn ? (
-                        <div className="ml-20">
-                            <UserAvatarMenu />{" "}
-                        </div>
-                    ) : null}
+                    {/* Right side */}
+                    <div className="flex items-center gap-4 ml-6">
+                        {!isLoggedIn && (
+                            <button className="bg-accent px-5 py-2 rounded-lg text-sm font-medium hover:bg-accent/80 transition">
+                                Login
+                            </button>
+                        )}
+
+                        {isLoggedIn && <UserAvatarMenu />}
+                    </div>
                 </nav>
+            </header>
+
+            {/* 📱 Mobile */}
+            <div className="md:hidden flex items-center justify-between px-4 py-3 border-b border-white/10 bg-background">
+                <span className="font-bold">
+                    Ani<span className="text-accent">Net</span>
+                </span>
+                {/* TODO: hamburger menu */}
             </div>
 
-            <div className="md:hidden">{/* Sheet hamburger menu here */}</div>
-            <div className="bg-background text-foreground">
+            {/* Content */}
+            <main className="bg-background text-foreground min-h-screen">
                 <Outlet />
-            </div>
-        </React.Fragment>
+            </main>
+        </>
     )
 }

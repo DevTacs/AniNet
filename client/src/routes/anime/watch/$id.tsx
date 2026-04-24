@@ -4,7 +4,7 @@ import {useQuery} from "@tanstack/react-query"
 import {createFileRoute} from "@tanstack/react-router"
 import {useEffect, useState} from "react"
 
-export const Route = createFileRoute("/anime/$id")({
+export const Route = createFileRoute("/anime/watch/$id")({
     component: RouteComponent,
 })
 
