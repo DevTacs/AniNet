@@ -1,6 +1,7 @@
 import express from "express"
 import cors from "cors"
 import {connectDB} from "./configs/db.config.js"
+import cookieParser from "cookie-parser"
 
 const app = express()
 app.use(
@@ -10,6 +11,7 @@ app.use(
     }),
 )
 app.use(express.json())
+app.use(cookieParser())
 connectDB()
 
 import "./configs/passport.config.js"
