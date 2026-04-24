@@ -1,3 +1,5 @@
+import UserAvatarMenu from "@/components/avatar-menu"
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar"
 import {Link, Outlet, createRootRoute} from "@tanstack/react-router"
 import React from "react"
 
@@ -6,6 +8,8 @@ export const Route = createRootRoute({
 })
 
 function RootComponent() {
+    const [isLoggedIn, setIsLoggedIn] = React.useState(true)
+
     return (
         <React.Fragment>
             <div className="hidden md:flex gap-4 justify-between bg-background py-4 px-20 border-2 border-b-foreground">
@@ -34,6 +38,16 @@ function RootComponent() {
                         activeOptions={{exact: true}}>
                         All Anime
                     </Link>
+                    {!isLoggedIn ? (
+                        <button className="text-foreground bg-accent px-6 rounded-md">
+                            Login
+                        </button>
+                    ) : null}
+                    {isLoggedIn ? (
+                        <div className="ml-20">
+                            <UserAvatarMenu />{" "}
+                        </div>
+                    ) : null}
                 </nav>
             </div>
 

@@ -1,5 +1,6 @@
 import passport from "passport"
 import {Strategy as GoogleStrategy} from "passport-google-oauth20"
+import {Strategy as localStarategy} from "passport-local"
 
 if (!process.env.GOOGLE_CLIENT_ID) {
     throw new Error("GOOGLE_CLIENT_ID is not defined in environment variables")
@@ -30,5 +31,9 @@ passport.use(
         },
     ),
 )
+
+passport.use(new localStarategy(async (username, password, done) => {}))
+
+passport
 
 export default passport
