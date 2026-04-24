@@ -1,6 +1,8 @@
 import express from "express"
 import passport from "passport"
 import jwt from "jsonwebtoken"
+import {isAuthenticated} from "../middlewares/auth.middleware.js"
+import {getMeAsync} from "../controllers/user.controller.js"
 
 const router = express.Router()
 
@@ -26,8 +28,10 @@ router.get(
             maxAge: 3600000, // 1 hour
         })
 
-        res.redirect(`${process.env.CLIENT_URL}/login/success?token=${token}`)
+        res.redirect(`${process.env.CLIENT_URL}/anime`)
     },
 )
+
+router.get("/me", isAuthenticated, getMeAsync)
 
 export default router

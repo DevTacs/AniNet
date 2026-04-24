@@ -37,7 +37,7 @@ function RouteComponent() {
                 <input
                     type="text"
                     placeholder="Search anime..."
-                    className="w-[300px] border border-white/10 bg-white/5 px-4 py-2 rounded-lg outline-none focus:ring-2 focus:ring-accent transition"
+                    className="w-75 border border-white/10 bg-white/5 px-4 py-2 rounded-lg outline-none focus:ring-2 focus:ring-accent transition"
                 />
                 <button className="bg-accent px-5 py-2 rounded-lg font-medium hover:bg-accent/80 transition">
                     Search
