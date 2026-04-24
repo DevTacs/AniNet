@@ -52,13 +52,13 @@ function RouteComponent() {
 
                 <CardContent>
                     <form onSubmit={handleLogin} className="space-y-5">
-                        {/* Email */}
+                        {/* Username */}
                         <div className="space-y-2">
-                            <Label htmlFor="email">Email</Label>
+                            <Label htmlFor="username">Username</Label>
                             <Input
-                                id="email"
-                                type="email"
-                                placeholder="m@example.com"
+                                id="username"
+                                type="text"
+                                placeholder="Enter your username"
                                 className="bg-white/5 border-white/10 focus:ring-2 focus:ring-accent"
                                 required
                             />

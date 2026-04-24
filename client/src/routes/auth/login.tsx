@@ -49,11 +49,11 @@ function RouteComponent() {
                     <form className="space-y-5">
                         {/* Email */}
                         <div className="space-y-2">
-                            <Label htmlFor="email">Email</Label>
+                            <Label htmlFor="username">Username</Label>
                             <Input
-                                id="email"
-                                type="email"
-                                placeholder="m@example.com"
+                                id="username"
+                                type="text"
+                                placeholder="Enter username"
                                 required
                                 className="bg-white/5 border-white/10 focus:ring-2 focus:ring-accent"
                             />
