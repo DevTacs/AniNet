@@ -1,5 +1,4 @@
 import UserAvatarMenu from "@/components/avatar-menu"
-import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar"
 import {Link, Outlet, createRootRoute} from "@tanstack/react-router"
 import React from "react"
 
@@ -7,7 +6,7 @@ export const Route = createRootRoute({
     component: RootComponent,
 })
 function RootComponent() {
-    const [isLoggedIn, setIsLoggedIn] = React.useState(true)
+    const [isLoggedIn, setIsLoggedIn] = React.useState(false)
 
     return (
         <>
@@ -55,7 +54,7 @@ function RootComponent() {
                     {/* Right side */}
                     <div className="flex items-center gap-4 ml-6">
                         {!isLoggedIn && (
-                            <button className="bg-accent px-5 py-2 rounded-lg text-sm font-medium hover:bg-accent/80 transition">
+                            <button className="bg-accent text-foreground px-5 py-2 rounded-lg text-sm font-medium hover:bg-accent/80 transition">
                                 Login
                             </button>
                         )}
