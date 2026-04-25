@@ -18,6 +18,24 @@ export const Route = createFileRoute("/anime/featured-anime")({
     component: RouteComponent,
 })
 
+function FeaturedSkeleton() {
+    return (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
+            {Array.from({length: 10}).map((_, i) => (
+                <div
+                    key={i}
+                    className="animate-pulse bg-white/5 border border-white/10 rounded-xl overflow-hidden">
+                    <div className="h-60 bg-white/10" />
+                    <div className="p-3 space-y-2">
+                        <div className="h-3 w-3/4 bg-white/10 rounded" />
+                        <div className="h-3 w-1/2 bg-white/10 rounded" />
+                    </div>
+                </div>
+            ))}
+        </div>
+    )
+}
+
 function RouteComponent() {
     // ✔ restore selected page
     const [page, setPage] = useState<number>(() => {
@@ -40,15 +58,23 @@ function RouteComponent() {
         localStorage.setItem("featured-pages", JSON.stringify(pages))
     }, [pages])
 
-    const {data} = useQuery<AnimeDetails[]>({
+    const {data, isLoading, isFetching} = useQuery<AnimeDetails[]>({
         queryKey: ["anime", "featured", page],
         queryFn: () => getFeaturedAnimeAsync(page),
+        keepPreviousData: true,
     })
 
     return (
         <div className="min-h-screen p-6 lg:p-10">
             {/* FEATURED */}
-            {data && <FeaturedCards data={data} />}
+            {isLoading ? (
+                <FeaturedSkeleton />
+            ) : (
+                <>
+                    {isFetching && <div className="opacity-50 transition" />}
+                    {data && <FeaturedCards data={data} />}
+                </>
+            )}
 
             {/* PAGINATION */}
             <div className="mt-10 flex justify-center">
@@ -84,7 +110,7 @@ function RouteComponent() {
                             </PaginationItem>
                         ))}
 
-                        {/* Next (adds new page) */}
+                        {/* Next */}
                         <PaginationItem>
                             <PaginationNext
                                 onClick={() => {
