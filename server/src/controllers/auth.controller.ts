@@ -17,6 +17,11 @@ export const googleCallbackAsync = async (req: Request, res: Response) => {
         maxAge: 3600000, // 1 hour
     })
 
+    const existingUser = await User.findOne({googleId: user.googleId})
+    if (existingUser) {
+        return res.redirect(`${process.env.CLIENT_URL}/anime/browse`)
+    }
+
     await User.create({
         googleId: user.googleId,
         username: user.username,
