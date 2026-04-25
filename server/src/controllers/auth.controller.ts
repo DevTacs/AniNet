@@ -47,6 +47,7 @@ export const getMeAsync = async (req: Request, res: Response) => {
 export const loginUserAsync = async (req: Request, res: Response) => {
     try {
         const user = req.user as AuthUser
+        console.log(user)
         if (!user) return res.status(401).json({message: "User not found"})
 
         const token = jwt.sign(

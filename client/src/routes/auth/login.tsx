@@ -15,6 +15,7 @@ import {zodResolver} from "@hookform/resolvers/zod"
 import {useForm} from "react-hook-form"
 import {loginSchema, type LoginSchemaInfer} from "@/schemas/auth.schema"
 import {useMutation} from "@tanstack/react-query"
+import {loginUserAsync} from "@/services/auth.service"
 
 export const Route = createFileRoute("/auth/login")({
     component: RouteComponent,
@@ -35,10 +36,18 @@ function RouteComponent() {
     })
     const {mutateAsync} = useMutation({
         mutationKey: ["login"],
-        mutationFn: async (data: LoginSchemaInfer) => {},
+        mutationFn: async (data: LoginSchemaInfer) => loginUserAsync(data),
     })
 
-    const handleOnSubmit = async (data: LoginSchemaInfer) => {}
+    const handleOnSubmit = async (data: LoginSchemaInfer) => {
+        try {
+            await mutateAsync(data)
+            navigate({to: "/anime/browse"})
+        } catch (error) {
+            console.log(error)
+            throw error
+        }
+    }
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-background text-foreground">
