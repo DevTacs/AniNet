@@ -80,7 +80,7 @@ function RouteComponent() {
 
                 <CardFooter className="flex flex-col gap-3">
                     <Button
-                        onClick={() => navigate({to: "/anime"})}
+                        onClick={() => navigate({to: "/anime/browse"})}
                         variant="outline"
                         className="w-full">
                         Login as Guest

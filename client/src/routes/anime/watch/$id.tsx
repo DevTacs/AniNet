@@ -1,3 +1,4 @@
+import {api} from "@/configs/axios.config"
 import {getAnimeByIdAsync, getEpisodesByIdAsync} from "@/services/anime.service"
 import type {AnimeEpisode, AnimeInfo} from "@/types/anime.type"
 import {useQuery} from "@tanstack/react-query"
@@ -6,9 +7,14 @@ import {useEffect, useState} from "react"
 
 export const Route = createFileRoute("/anime/watch/$id")({
     component: RouteComponent,
+    loader: async () => {
+        const response = await api.get("/auth/authenticated")
+        return response.data
+    },
 })
 
 function RouteComponent() {
+    const authData = Route.useLoaderData()
     const {id} = Route.useParams()
     const [selectedEpisode, setSelectedEpisode] = useState<string | undefined>(
         "",
@@ -82,15 +88,17 @@ function RouteComponent() {
                             {data?.description}
                         </p>
                     </div>
-                    <button
-                        className={`bg-accent text-foreground hover:bg-accent/80 py-2 px-4 rounded-md ${
-                            isBookmarked
-                                ? "bg-green-500 hover:bg-green-600"
-                                : ""
-                        }`}
-                        onClick={() => setIsBookmarked(!isBookmarked)}>
-                        {isBookmarked ? "Remove Bookmark" : "Bookmark"}
-                    </button>
+                    {authData && (
+                        <button
+                            className={`bg-accent text-foreground hover:bg-accent/80 py-2 px-4 rounded-md ${
+                                isBookmarked
+                                    ? "bg-green-500 hover:bg-green-600"
+                                    : ""
+                            }`}
+                            onClick={() => setIsBookmarked(!isBookmarked)}>
+                            {isBookmarked ? "Remove Bookmark" : "Bookmark"}
+                        </button>
+                    )}
                 </div>
 
                 {/* RIGHT: IMAGE */}
