@@ -4,7 +4,6 @@ import {
     Link,
     Outlet,
     createRootRoute,
-    redirect,
     useNavigate,
 } from "@tanstack/react-router"
 
@@ -17,7 +16,6 @@ export const Route = createRootRoute({
 })
 function RootComponent() {
     const data = Route.useLoaderData()
-    console.log(data)
     const navigate = useNavigate()
 
     const handleOnLoginClick = () => navigate({to: "/auth/login"})

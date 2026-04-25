@@ -1,5 +1,6 @@
 import express from "express"
 import {
+    getAnimeByCategory,
     getAnimeByIdAsync,
     getEpisodesByIdAsync,
     getTopRatedAnimeAsync,
@@ -8,6 +9,7 @@ import {
 const router = express.Router()
 
 router.get("/featured", getTopRatedAnimeAsync)
-router.get("/:id", getAnimeByIdAsync)
+router.get("/browse", getAnimeByCategory)
 router.get("/:id/episodes", getEpisodesByIdAsync)
+router.get("/:id", getAnimeByIdAsync)
 export default router

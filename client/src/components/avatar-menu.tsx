@@ -17,9 +17,7 @@ type AuthUser = {
 }
 
 export default function UserAvatarMenu({data}: {data: AuthUser}) {
-    console.log(data.avatar)
     const navigate = useNavigate()
-    //https://github.com/shadcn.png
     return (
         <DropdownMenu>
             {/* Avatar Trigger */}
@@ -29,7 +27,6 @@ export default function UserAvatarMenu({data}: {data: AuthUser}) {
                         src={data.avatar}
                         referrerPolicy="no-referrer"
                     />
-                    <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
             </DropdownMenuTrigger>
 

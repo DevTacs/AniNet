@@ -38,3 +38,20 @@ export const getEpisodesByIdAsync = async (
         throw error
     }
 }
+
+export const getAnimeByCategory = async (
+    genre: string,
+    page: number,
+): Promise<AnimeDetails[]> => {
+    try {
+        console.log(page)
+        const {
+            data: {wholePage},
+        } = await api.get(`/anime/browse?genre=${genre}&page=${page}`)
+
+        return animeResponsesMap(wholePage)
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}

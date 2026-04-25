@@ -1,5 +1,5 @@
 import {type Request, type Response} from "express"
-import {getInfo, getStreamingLinks, getTopRated} from "anipub"
+import {findByGenre, getInfo, getStreamingLinks, getTopRated} from "anipub"
 
 export const getTopRatedAnimeAsync = async (req: Request, res: Response) => {
     try {
@@ -9,9 +9,7 @@ export const getTopRatedAnimeAsync = async (req: Request, res: Response) => {
         res.json(result)
     } catch (error) {
         console.log(error)
-        res.status(500).json({
-            error: "An error occurred while fetching top-rated anime.",
-        })
+        res.status(500).json({message: "Internal server error"})
     }
 }
 
@@ -25,9 +23,7 @@ export const getAnimeByIdAsync = async (
         res.json(data)
     } catch (error) {
         console.log(error)
-        res.status(500).json({
-            error: "An error occurred while fetching anime details.",
-        })
+        res.status(500).json({message: "Internal server error"})
     }
 }
 
@@ -41,6 +37,19 @@ export const getEpisodesByIdAsync = async (
         res.json(episodes)
     } catch (error) {
         console.log(error)
-        throw error
+        res.status(500).json({message: "Internal server error"})
+    }
+}
+
+export const getAnimeByCategory = async (req: Request, res: Response) => {
+    try {
+        const genre = req.query.genre as string
+        const page = Number(req.query.page)
+
+        const anime = await findByGenre(genre)
+        res.json(anime)
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({message: "Internal server error"})
     }
 }
