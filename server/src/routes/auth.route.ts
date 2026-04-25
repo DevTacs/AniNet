@@ -36,7 +36,6 @@ router.get("/authenticated", (req, res) => {
         return res.json(null)
     }
     const decoded = jwt.verify(token, process.env.JWT_SECRET!)
-    console.log(decoded)
     res.json(decoded)
 })
 router.get("/me", isAuthenticated, getMeAsync)

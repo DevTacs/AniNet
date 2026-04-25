@@ -5,7 +5,6 @@ export const Route = createFileRoute("/auth")({
     component: RouteComponent,
     loader: async () => {
         const response = await api.get("/auth/authenticated")
-        console.log(response.data)
         if (response.data) {
             throw redirect({
                 to: "/anime/browse",
