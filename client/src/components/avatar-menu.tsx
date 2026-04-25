@@ -7,8 +7,9 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-
-import {Route, useNavigate} from "@tanstack/react-router"
+import {logoutUserAsync} from "@/services/auth.service"
+import {useMutation} from "@tanstack/react-query"
+import {useNavigate} from "@tanstack/react-router"
 
 type AuthUser = {
     username: string
@@ -18,6 +19,19 @@ type AuthUser = {
 
 export default function UserAvatarMenu({data}: {data: AuthUser}) {
     const navigate = useNavigate()
+    const {mutateAsync} = useMutation({
+        mutationKey: ["logout"],
+        mutationFn: async () => logoutUserAsync(),
+    })
+    const handleLogout = async () => {
+        try {
+            await mutateAsync()
+            navigate({to: "/auth/login"})
+        } catch (error) {
+            console.log(error)
+            throw error
+        }
+    }
     return (
         <DropdownMenu>
             {/* Avatar Trigger */}
@@ -40,7 +54,9 @@ export default function UserAvatarMenu({data}: {data: AuthUser}) {
                     <p className="text-xs text-gray-400">{data.email}</p>
                 </div>
                 <DropdownMenuSeparator className="bg-white/10" />
-                <DropdownMenuItem className="text-accent hover:bg-accent hover:text-foreground">
+                <DropdownMenuItem
+                    className="text-accent hover:bg-accent hover:text-foreground"
+                    onClick={() => handleLogout()}>
                     Logout
                 </DropdownMenuItem>
             </DropdownMenuContent>
