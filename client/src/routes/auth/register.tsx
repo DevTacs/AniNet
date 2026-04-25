@@ -1,4 +1,4 @@
-import {createFileRoute, Link} from "@tanstack/react-router"
+import {createFileRoute, Link, useNavigate} from "@tanstack/react-router"
 import {Button} from "@/components/ui/button"
 import {
     Card,
@@ -11,19 +11,46 @@ import {
 } from "@/components/ui/card"
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
+import {registerSchema, type RegisterSchemaInfer} from "@/schemas/auth.schema"
+import {useForm} from "react-hook-form"
+import {zodResolver} from "@hookform/resolvers/zod"
+import {useMutation} from "@tanstack/react-query"
+import {registerUserAsync} from "@/services/auth.service"
 
 export const Route = createFileRoute("/auth/register")({
     component: RouteComponent,
 })
 function RouteComponent() {
+    const navigate = useNavigate()
+    const {
+        register,
+        handleSubmit,
+        formState: {errors},
+    } = useForm<RegisterSchemaInfer>({
+        resolver: zodResolver(registerSchema),
+        defaultValues: {
+            username: "",
+            email: "",
+            password: "",
+        },
+    })
+
+    const {mutateAsync} = useMutation({
+        mutationKey: ["register"],
+        mutationFn: async (data: RegisterSchemaInfer) =>
+            registerUserAsync(data),
+    })
     const handleGoogleLogin = () => {
         window.location.href = `${import.meta.env.VITE_SERVER_URL}/auth/google`
     }
 
-    const handleLogin = (e: React.FormEvent) => {
-        e.preventDefault()
-        console.log("login submit")
-        // TODO: email/password login API
+    const handleRegister = async (data: RegisterSchemaInfer) => {
+        try {
+            await mutateAsync(data)
+            navigate({to: "/anime/browse"})
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     return (
@@ -51,7 +78,9 @@ function RouteComponent() {
                 </CardHeader>
 
                 <CardContent>
-                    <form onSubmit={handleLogin} className="space-y-5">
+                    <form
+                        onSubmit={handleSubmit(handleRegister)}
+                        className="space-y-5">
                         {/* Username */}
                         <div className="space-y-2">
                             <Label htmlFor="username">Username</Label>
@@ -60,10 +89,14 @@ function RouteComponent() {
                                 type="text"
                                 placeholder="Enter your username"
                                 className="bg-white/5 border-white/10 focus:ring-2 focus:ring-accent"
-                                required
+                                {...register("username")}
                             />
+                            {errors.username && (
+                                <p className="text-red-500 text-sm mt-1">
+                                    {errors.username.message}
+                                </p>
+                            )}
                         </div>
-
                         <div className="space-y-2">
                             <Label htmlFor="email">Email</Label>
                             <Input
@@ -71,10 +104,14 @@ function RouteComponent() {
                                 type="email"
                                 placeholder="Enter your email"
                                 className="bg-white/5 border-white/10 focus:ring-2 focus:ring-accent"
-                                required
+                                {...register("email")}
                             />
+                            {errors.username && (
+                                <p className="text-red-500 text-sm mt-1">
+                                    {errors.username.message}
+                                </p>
+                            )}
                         </div>
-
                         {/* Password */}
                         <div className="space-y-2">
                             <Label htmlFor="password">Password</Label>
@@ -83,13 +120,15 @@ function RouteComponent() {
                                 type="password"
                                 placeholder="Create password"
                                 className="bg-white/5 border-white/10 focus:ring-2 focus:ring-accent"
-                                required
+                                {...register("password")}
                             />
+                            {errors.username && (
+                                <p className="text-red-500 text-sm mt-1">
+                                    {errors.username.message}
+                                </p>
+                            )}
                         </div>
-
-                        <Button
-                            type="submit"
-                            className="w-full bg-accent hover:bg-accent/80 text-white">
+                        <Button className="w-full bg-accent hover:bg-accent/80 text-white">
                             Create
                         </Button>
                     </form>

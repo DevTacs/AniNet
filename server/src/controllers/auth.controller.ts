@@ -1,5 +1,5 @@
 import {Request, Response} from "express"
-import {AuthUser} from "../types/auth.type.js"
+import {AuthUser, GoogleUser} from "../types/auth.type.js"
 import jwt from "jsonwebtoken"
 import User from "../models/users.model.js"
 import bcrypt from "bcrypt"
@@ -17,7 +17,13 @@ export const googleCallbackAsync = async (req: Request, res: Response) => {
         maxAge: 3600000, // 1 hour
     })
 
-    res.redirect(`${process.env.CLIENT_URL}/anime`)
+    await User.create({
+        googleId: user.googleId,
+        username: user.username,
+        email: user.email,
+        avatar: user.avatar,
+    })
+    res.redirect(`${process.env.CLIENT_URL}/anime/browse`)
 }
 
 export const getUserFromCookieAsync = async (req: Request, res: Response) => {
@@ -54,6 +60,33 @@ export const registerUserAsync = async (req: Request, res: Response) => {
             username,
             email,
             password: hashedPassword,
+        })
+
+        const findUser = await User.findOne(
+            {email},
+            {
+                id: true,
+                username: true,
+                email: true,
+                avatar: true,
+            },
+        )
+        const payload = {
+            id: findUser?.id.toString(),
+            username: findUser?.username,
+            email: findUser?.email,
+            avatar: findUser?.avatar,
+        }
+
+        const token = jwt.sign(payload, process.env.JWT_SECRET!, {
+            expiresIn: "1d",
+        })
+
+        res.cookie("authToken", token, {
+            httpOnly: true, // 👈 cannot be accessed by JS
+            secure: process.env.ENVIRONMENT === "production", // true in production (HTTPS)
+            sameSite: "lax",
+            maxAge: 3600000, // 1 hour
         })
 
         res.json({user, message: "User created successfully"})
