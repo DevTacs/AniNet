@@ -8,7 +8,7 @@ export const Route = createFileRoute("/auth")({
         console.log(response.data)
         if (response.data) {
             throw redirect({
-                to: "/anime",
+                to: "/anime/browse",
             })
         }
     },

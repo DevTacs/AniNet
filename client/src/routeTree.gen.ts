@@ -11,10 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteRouteImport } from './routes/auth/route'
 import { Route as AnimeRouteRouteImport } from './routes/anime/route'
-import { Route as AnimeIndexRouteImport } from './routes/anime/index'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AnimeFeaturedAnimeRouteImport } from './routes/anime/featured-anime'
+import { Route as AnimeBrowseRouteImport } from './routes/anime/browse'
 import { Route as AnimeBookmarkRouteImport } from './routes/anime/bookmark'
 import { Route as AnimeWatchIdRouteImport } from './routes/anime/watch/$id'
 
@@ -27,11 +27,6 @@ const AnimeRouteRoute = AnimeRouteRouteImport.update({
   id: '/anime',
   path: '/anime',
   getParentRoute: () => rootRouteImport,
-} as any)
-const AnimeIndexRoute = AnimeIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AnimeRouteRoute,
 } as any)
 const AuthRegisterRoute = AuthRegisterRouteImport.update({
   id: '/register',
@@ -46,6 +41,11 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
 const AnimeFeaturedAnimeRoute = AnimeFeaturedAnimeRouteImport.update({
   id: '/featured-anime',
   path: '/featured-anime',
+  getParentRoute: () => AnimeRouteRoute,
+} as any)
+const AnimeBrowseRoute = AnimeBrowseRouteImport.update({
+  id: '/browse',
+  path: '/browse',
   getParentRoute: () => AnimeRouteRoute,
 } as any)
 const AnimeBookmarkRoute = AnimeBookmarkRouteImport.update({
@@ -63,19 +63,20 @@ export interface FileRoutesByFullPath {
   '/anime': typeof AnimeRouteRouteWithChildren
   '/auth': typeof AuthRouteRouteWithChildren
   '/anime/bookmark': typeof AnimeBookmarkRoute
+  '/anime/browse': typeof AnimeBrowseRoute
   '/anime/featured-anime': typeof AnimeFeaturedAnimeRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
-  '/anime/': typeof AnimeIndexRoute
   '/anime/watch/$id': typeof AnimeWatchIdRoute
 }
 export interface FileRoutesByTo {
+  '/anime': typeof AnimeRouteRouteWithChildren
   '/auth': typeof AuthRouteRouteWithChildren
   '/anime/bookmark': typeof AnimeBookmarkRoute
+  '/anime/browse': typeof AnimeBrowseRoute
   '/anime/featured-anime': typeof AnimeFeaturedAnimeRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
-  '/anime': typeof AnimeIndexRoute
   '/anime/watch/$id': typeof AnimeWatchIdRoute
 }
 export interface FileRoutesById {
@@ -83,10 +84,10 @@ export interface FileRoutesById {
   '/anime': typeof AnimeRouteRouteWithChildren
   '/auth': typeof AuthRouteRouteWithChildren
   '/anime/bookmark': typeof AnimeBookmarkRoute
+  '/anime/browse': typeof AnimeBrowseRoute
   '/anime/featured-anime': typeof AnimeFeaturedAnimeRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
-  '/anime/': typeof AnimeIndexRoute
   '/anime/watch/$id': typeof AnimeWatchIdRoute
 }
 export interface FileRouteTypes {
@@ -95,29 +96,30 @@ export interface FileRouteTypes {
     | '/anime'
     | '/auth'
     | '/anime/bookmark'
+    | '/anime/browse'
     | '/anime/featured-anime'
     | '/auth/login'
     | '/auth/register'
-    | '/anime/'
     | '/anime/watch/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/anime'
     | '/auth'
     | '/anime/bookmark'
+    | '/anime/browse'
     | '/anime/featured-anime'
     | '/auth/login'
     | '/auth/register'
-    | '/anime'
     | '/anime/watch/$id'
   id:
     | '__root__'
     | '/anime'
     | '/auth'
     | '/anime/bookmark'
+    | '/anime/browse'
     | '/anime/featured-anime'
     | '/auth/login'
     | '/auth/register'
-    | '/anime/'
     | '/anime/watch/$id'
   fileRoutesById: FileRoutesById
 }
@@ -142,13 +144,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AnimeRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/anime/': {
-      id: '/anime/'
-      path: '/'
-      fullPath: '/anime/'
-      preLoaderRoute: typeof AnimeIndexRouteImport
-      parentRoute: typeof AnimeRouteRoute
-    }
     '/auth/register': {
       id: '/auth/register'
       path: '/register'
@@ -170,6 +165,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AnimeFeaturedAnimeRouteImport
       parentRoute: typeof AnimeRouteRoute
     }
+    '/anime/browse': {
+      id: '/anime/browse'
+      path: '/browse'
+      fullPath: '/anime/browse'
+      preLoaderRoute: typeof AnimeBrowseRouteImport
+      parentRoute: typeof AnimeRouteRoute
+    }
     '/anime/bookmark': {
       id: '/anime/bookmark'
       path: '/bookmark'
@@ -189,15 +191,15 @@ declare module '@tanstack/react-router' {
 
 interface AnimeRouteRouteChildren {
   AnimeBookmarkRoute: typeof AnimeBookmarkRoute
+  AnimeBrowseRoute: typeof AnimeBrowseRoute
   AnimeFeaturedAnimeRoute: typeof AnimeFeaturedAnimeRoute
-  AnimeIndexRoute: typeof AnimeIndexRoute
   AnimeWatchIdRoute: typeof AnimeWatchIdRoute
 }
 
 const AnimeRouteRouteChildren: AnimeRouteRouteChildren = {
   AnimeBookmarkRoute: AnimeBookmarkRoute,
+  AnimeBrowseRoute: AnimeBrowseRoute,
   AnimeFeaturedAnimeRoute: AnimeFeaturedAnimeRoute,
-  AnimeIndexRoute: AnimeIndexRoute,
   AnimeWatchIdRoute: AnimeWatchIdRoute,
 }
 

@@ -8,17 +8,27 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-import {useNavigate} from "@tanstack/react-router"
+import {Route, useNavigate} from "@tanstack/react-router"
 
-export default function UserAvatarMenu() {
+type AuthUser = {
+    username: string
+    email: string
+    avatar: string
+}
+
+export default function UserAvatarMenu({data}: {data: AuthUser}) {
+    console.log(data.avatar)
     const navigate = useNavigate()
-
+    //https://github.com/shadcn.png
     return (
         <DropdownMenu>
             {/* Avatar Trigger */}
             <DropdownMenuTrigger asChild>
                 <Avatar>
-                    <AvatarImage src="https://github.com/shadcn.png" />
+                    <AvatarImage
+                        src={data.avatar}
+                        referrerPolicy="no-referrer"
+                    />
                     <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
             </DropdownMenuTrigger>
@@ -29,8 +39,8 @@ export default function UserAvatarMenu() {
                 className="w-56 rounded-xl p-2 shadow-lg bg-background border border-white/10 text-foreground">
                 {/* User Info */}
                 <div className="px-2 py-1.5">
-                    <p className="text-sm font-medium">John Doe</p>
-                    <p className="text-xs text-gray-400">john@email.com</p>
+                    <p className="text-sm font-medium">{data.username}</p>
+                    <p className="text-xs text-gray-400">{data.email}</p>
                 </div>
                 <DropdownMenuSeparator className="bg-white/10" />
                 <DropdownMenuItem className="text-accent hover:bg-accent hover:text-foreground">

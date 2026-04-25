@@ -17,6 +17,7 @@ export const Route = createRootRoute({
 })
 function RootComponent() {
     const data = Route.useLoaderData()
+    console.log(data)
     const navigate = useNavigate()
 
     const handleOnLoginClick = () => navigate({to: "/auth/login"})
@@ -43,7 +44,7 @@ function RootComponent() {
                     </Link>
 
                     <Link
-                        to="/anime"
+                        to="/anime/browse"
                         className="text-sm text-foreground/70 hover:text-foreground transition"
                         activeProps={{
                             className:
@@ -74,7 +75,7 @@ function RootComponent() {
                             </button>
                         )}
 
-                        {data && <UserAvatarMenu />}
+                        {data && <UserAvatarMenu data={data} />}
                     </div>
                 </nav>
             </header>
