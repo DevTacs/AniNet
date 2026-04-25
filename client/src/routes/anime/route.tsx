@@ -1,12 +1,25 @@
 import UserAvatarMenu from "@/components/avatar-menu"
-import {Link, Outlet, createRootRoute} from "@tanstack/react-router"
-import React from "react"
+import {api} from "@/configs/axios.config"
+import {
+    Link,
+    Outlet,
+    createRootRoute,
+    redirect,
+    useNavigate,
+} from "@tanstack/react-router"
 
 export const Route = createRootRoute({
     component: RootComponent,
+    loader: async () => {
+        const response = await api.get("/auth/authenticated")
+        return response.data
+    },
 })
 function RootComponent() {
-    const [isLoggedIn, setIsLoggedIn] = React.useState(true)
+    const data = Route.useLoaderData()
+    const navigate = useNavigate()
+
+    const handleOnLoginClick = () => navigate({to: "/auth/login"})
 
     return (
         <>
@@ -30,7 +43,7 @@ function RootComponent() {
                     </Link>
 
                     <Link
-                        to="/anime/all"
+                        to="/anime"
                         className="text-sm text-foreground/70 hover:text-foreground transition"
                         activeProps={{
                             className:
@@ -39,7 +52,7 @@ function RootComponent() {
                         Browse
                     </Link>
 
-                    {isLoggedIn && (
+                    {data && (
                         <Link
                             to="/anime/bookmark"
                             className="text-sm text-foreground/70 hover:text-foreground transition"
@@ -53,13 +66,15 @@ function RootComponent() {
 
                     {/* Right side */}
                     <div className="flex items-center gap-4 ml-6">
-                        {!isLoggedIn && (
-                            <button className="bg-accent text-foreground px-5 py-2 rounded-lg text-sm font-medium hover:bg-accent/80 transition">
+                        {!data && (
+                            <button
+                                className="bg-accent text-foreground px-5 py-2 rounded-lg text-sm font-medium hover:bg-accent/80 transition"
+                                onClick={handleOnLoginClick}>
                                 Login
                             </button>
                         )}
 
-                        {isLoggedIn && <UserAvatarMenu />}
+                        {data && <UserAvatarMenu />}
                     </div>
                 </nav>
             </header>

@@ -6,15 +6,20 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination"
-import {useNavigate, createFileRoute} from "@tanstack/react-router"
+import {api} from "@/configs/axios.config"
+import {createFileRoute, redirect} from "@tanstack/react-router"
 import {useState} from "react"
 
 export const Route = createFileRoute("/anime/bookmark")({
     component: RouteComponent,
+    loader: async () => {
+        const response = await api.get("/auth/authenticated")
+        if (!response.data) throw redirect({to: "/auth/login"})
+        return response.data
+    },
 })
 
 function RouteComponent() {
-    const navigate = useNavigate()
     const [page, setPage] = useState(1)
     const genre: string[] = [
         "action",

@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AuthRouteRouteImport } from './routes/auth/route'
 import { Route as AnimeRouteRouteImport } from './routes/anime/route'
 import { Route as AnimeIndexRouteImport } from './routes/anime/index'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
@@ -17,6 +18,11 @@ import { Route as AnimeFeaturedAnimeRouteImport } from './routes/anime/featured-
 import { Route as AnimeBookmarkRouteImport } from './routes/anime/bookmark'
 import { Route as AnimeWatchIdRouteImport } from './routes/anime/watch/$id'
 
+const AuthRouteRoute = AuthRouteRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AnimeRouteRoute = AnimeRouteRouteImport.update({
   id: '/anime',
   path: '/anime',
@@ -28,14 +34,14 @@ const AnimeIndexRoute = AnimeIndexRouteImport.update({
   getParentRoute: () => AnimeRouteRoute,
 } as any)
 const AuthRegisterRoute = AuthRegisterRouteImport.update({
-  id: '/auth/register',
-  path: '/auth/register',
-  getParentRoute: () => rootRouteImport,
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 const AuthLoginRoute = AuthLoginRouteImport.update({
-  id: '/auth/login',
-  path: '/auth/login',
-  getParentRoute: () => rootRouteImport,
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 const AnimeFeaturedAnimeRoute = AnimeFeaturedAnimeRouteImport.update({
   id: '/featured-anime',
@@ -55,6 +61,7 @@ const AnimeWatchIdRoute = AnimeWatchIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/anime': typeof AnimeRouteRouteWithChildren
+  '/auth': typeof AuthRouteRouteWithChildren
   '/anime/bookmark': typeof AnimeBookmarkRoute
   '/anime/featured-anime': typeof AnimeFeaturedAnimeRoute
   '/auth/login': typeof AuthLoginRoute
@@ -63,6 +70,7 @@ export interface FileRoutesByFullPath {
   '/anime/watch/$id': typeof AnimeWatchIdRoute
 }
 export interface FileRoutesByTo {
+  '/auth': typeof AuthRouteRouteWithChildren
   '/anime/bookmark': typeof AnimeBookmarkRoute
   '/anime/featured-anime': typeof AnimeFeaturedAnimeRoute
   '/auth/login': typeof AuthLoginRoute
@@ -73,6 +81,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/anime': typeof AnimeRouteRouteWithChildren
+  '/auth': typeof AuthRouteRouteWithChildren
   '/anime/bookmark': typeof AnimeBookmarkRoute
   '/anime/featured-anime': typeof AnimeFeaturedAnimeRoute
   '/auth/login': typeof AuthLoginRoute
@@ -84,6 +93,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/anime'
+    | '/auth'
     | '/anime/bookmark'
     | '/anime/featured-anime'
     | '/auth/login'
@@ -92,6 +102,7 @@ export interface FileRouteTypes {
     | '/anime/watch/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/auth'
     | '/anime/bookmark'
     | '/anime/featured-anime'
     | '/auth/login'
@@ -101,6 +112,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/anime'
+    | '/auth'
     | '/anime/bookmark'
     | '/anime/featured-anime'
     | '/auth/login'
@@ -111,12 +123,18 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   AnimeRouteRoute: typeof AnimeRouteRouteWithChildren
-  AuthLoginRoute: typeof AuthLoginRoute
-  AuthRegisterRoute: typeof AuthRegisterRoute
+  AuthRouteRoute: typeof AuthRouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/anime': {
       id: '/anime'
       path: '/anime'
@@ -133,17 +151,17 @@ declare module '@tanstack/react-router' {
     }
     '/auth/register': {
       id: '/auth/register'
-      path: '/auth/register'
+      path: '/register'
       fullPath: '/auth/register'
       preLoaderRoute: typeof AuthRegisterRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
     '/auth/login': {
       id: '/auth/login'
-      path: '/auth/login'
+      path: '/login'
       fullPath: '/auth/login'
       preLoaderRoute: typeof AuthLoginRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
     '/anime/featured-anime': {
       id: '/anime/featured-anime'
@@ -187,10 +205,23 @@ const AnimeRouteRouteWithChildren = AnimeRouteRoute._addFileChildren(
   AnimeRouteRouteChildren,
 )
 
-const rootRouteChildren: RootRouteChildren = {
-  AnimeRouteRoute: AnimeRouteRouteWithChildren,
+interface AuthRouteRouteChildren {
+  AuthLoginRoute: typeof AuthLoginRoute
+  AuthRegisterRoute: typeof AuthRegisterRoute
+}
+
+const AuthRouteRouteChildren: AuthRouteRouteChildren = {
   AuthLoginRoute: AuthLoginRoute,
   AuthRegisterRoute: AuthRegisterRoute,
+}
+
+const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
+  AuthRouteRouteChildren,
+)
+
+const rootRouteChildren: RootRouteChildren = {
+  AnimeRouteRoute: AnimeRouteRouteWithChildren,
+  AuthRouteRoute: AuthRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

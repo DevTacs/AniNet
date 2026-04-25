@@ -18,7 +18,7 @@ import "./configs/passport.config.js"
 import authRoutes from "./routes/auth.route.js"
 import animeRoutes from "./routes/anime.route.js"
 
-app.use("/auth", authRoutes)
+app.use("/api/auth", authRoutes)
 app.use("/api/anime", animeRoutes)
 
 const port = process.env.PORT

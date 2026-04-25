@@ -1,4 +1,4 @@
-import {createFileRoute, Link} from "@tanstack/react-router"
+import {createFileRoute, Link, useNavigate} from "@tanstack/react-router"
 import {Button} from "@/components/ui/button"
 import {
     Card,
@@ -17,8 +17,7 @@ export const Route = createFileRoute("/auth/login")({
 })
 
 function RouteComponent() {
-    const handleGoogleLogin = () =>
-        (window.location.href = `${import.meta.env.VITE_SERVER_URL}/auth/google`)
+    const navigate = useNavigate()
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-background text-foreground">
@@ -49,13 +48,13 @@ function RouteComponent() {
                     <form className="space-y-5">
                         {/* Email */}
                         <div className="space-y-2">
-                            <Label htmlFor="username">Username</Label>
+                            <Label htmlFor="email">Email</Label>
                             <Input
-                                id="username"
-                                type="text"
-                                placeholder="Enter username"
-                                required
+                                id="email"
+                                type="email"
+                                placeholder="Enter your email"
                                 className="bg-white/5 border-white/10 focus:ring-2 focus:ring-accent"
+                                required
                             />
                         </div>
 
@@ -73,13 +72,18 @@ function RouteComponent() {
                                 className="bg-white/5 border-white/10 focus:ring-2 focus:ring-accent"
                             />
                         </div>
+                        <Button className="w-full bg-accent hover:bg-accent/80 text-white">
+                            Login
+                        </Button>
                     </form>
                 </CardContent>
 
                 <CardFooter className="flex flex-col gap-3">
-                    {/* Login */}
-                    <Button className="w-full bg-accent hover:bg-accent/80 text-white">
-                        Login
+                    <Button
+                        onClick={() => navigate({to: "/anime"})}
+                        variant="outline"
+                        className="w-full">
+                        Login as Guest
                     </Button>
 
                     {/* Divider */}
@@ -91,7 +95,9 @@ function RouteComponent() {
 
                     {/* Google */}
                     <Button
-                        onClick={handleGoogleLogin}
+                        onClick={() =>
+                            (window.location.href = `${import.meta.env.VITE_API_URL}/api/auth/google`)
+                        }
                         variant="outline"
                         className="w-full border-white/10 bg-white/5 hover:bg-white/10">
                         Continue with Google

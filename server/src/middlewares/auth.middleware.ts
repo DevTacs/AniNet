@@ -8,12 +8,11 @@ export const isAuthenticated = (
 ) => {
     const token = req.cookies.authToken
     if (!token) {
-        return res.status(401).json({message: "Not authenticated"})
+        return res.status(401).json({data: null, message: "Not authenticated"})
     }
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET!)
         req.user = decoded
-        console.log(req.user)
         next()
     } catch (err) {
         console.log(err)

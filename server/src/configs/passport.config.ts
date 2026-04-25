@@ -1,6 +1,7 @@
 import passport from "passport"
 import {Strategy as GoogleStrategy} from "passport-google-oauth20"
 import {Strategy as localStarategy} from "passport-local"
+import {AuthUser} from "../types/auth.type.js"
 
 if (!process.env.GOOGLE_CLIENT_ID) {
     throw new Error("GOOGLE_CLIENT_ID is not defined in environment variables")
@@ -17,13 +18,13 @@ passport.use(
         {
             clientID: process.env.GOOGLE_CLIENT_ID!,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-            callbackURL: `${process.env.SERVER_URL}/auth/google/callback`,
+            callbackURL: `${process.env.SERVER_URL}/api/auth/google/callback`,
         },
         async (_, __, profile, done) => {
-            const user = {
-                googleId: profile.id,
-                name: profile.displayName,
-                email: profile.emails?.[0].value,
+            const user: AuthUser = {
+                id: profile.id,
+                username: profile.displayName,
+                email: profile.emails?.[0].value!,
                 avatar: profile.photos?.[0].value,
             }
 
@@ -33,7 +34,5 @@ passport.use(
 )
 
 passport.use(new localStarategy(async (username, password, done) => {}))
-
-passport
 
 export default passport

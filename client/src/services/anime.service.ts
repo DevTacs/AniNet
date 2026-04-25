@@ -6,7 +6,7 @@ export const getFeaturedAnimeAsync = async (): Promise<AnimeDetails[]> => {
     try {
         const {
             data: {AniData},
-        } = await api.get("/featured")
+        } = await api.get("/anime/featured")
 
         return animeResponsesMap(AniData)
     } catch (error) {
@@ -17,7 +17,7 @@ export const getFeaturedAnimeAsync = async (): Promise<AnimeDetails[]> => {
 
 export const getAnimeByIdAsync = async (id: number): Promise<AnimeInfo> => {
     try {
-        const {data} = await api.get(`/${id}`)
+        const {data} = await api.get(`/anime/${id}`)
         return animeResponseMap(data)
     } catch (error) {
         console.log(error)
@@ -31,7 +31,7 @@ export const getEpisodesByIdAsync = async (
     try {
         const {
             data: {episodes},
-        } = await api.get(`/${id}/episodes`)
+        } = await api.get(`/anime/${id}/episodes`)
         return episodes
     } catch (error) {
         console.log(error)
