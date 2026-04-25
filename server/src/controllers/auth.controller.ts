@@ -44,7 +44,34 @@ export const getMeAsync = async (req: Request, res: Response) => {
         console.log(error)
     }
 }
-export const loginUserAsync = async (req: Request, res: Response) => {}
+export const loginUserAsync = async (req: Request, res: Response) => {
+    try {
+        const user = req.user as AuthUser
+        if (!user) return res.status(401).json({message: "User not found"})
+
+        const token = jwt.sign(
+            {
+                id: user.id,
+                username: user.username,
+                email: user.email,
+                avatar: user.avatar,
+            },
+            process.env.JWT_SECRET!,
+        )
+
+        res.cookie("authToken", token, {
+            httpOnly: true, // 👈 cannot be accessed by JS
+            secure: process.env.ENVIRONMENT === "production", // true in production (HTTPS)
+            sameSite: "lax",
+            maxAge: 3600000, // 1 hour
+        })
+
+        res.json({message: "Login successful"})
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({message: "Internal server error"})
+    }
+}
 
 export const registerUserAsync = async (req: Request, res: Response) => {
     try {
@@ -90,6 +117,22 @@ export const registerUserAsync = async (req: Request, res: Response) => {
         })
 
         res.json({user, message: "User created successfully"})
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({message: "Internal server error"})
+    }
+}
+
+export const logoutUserAsync = async (req: Request, res: Response) => {
+    try {
+        res.clearCookie("authToken", {
+            httpOnly: true, // 👈 cannot be accessed by JS
+            secure: process.env.ENVIRONMENT === "production", // true in production (HTTPS)
+            sameSite: "lax",
+            maxAge: 3600000, // 1 hour
+        })
+
+        res.json({message: "Logged out"})
     } catch (error) {
         console.log(error)
         res.status(500).json({message: "Internal server error"})

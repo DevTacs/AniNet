@@ -6,9 +6,9 @@ import {
     getUserFromCookieAsync,
     googleCallbackAsync,
     loginUserAsync,
+    logoutUserAsync,
     registerUserAsync,
 } from "../controllers/auth.controller.js"
-import {AuthUser} from "../types/auth.type.js"
 import {isAuthenticated} from "../middlewares/auth.middleware.js"
 
 const router = express.Router()
@@ -24,7 +24,12 @@ router.get(
 )
 router.get("/authenticated", getUserFromCookieAsync)
 router.get("/me", isAuthenticated, getMeAsync)
-router.post("/login", loginUserAsync)
+router.post(
+    "/login",
+    passport.authenticate("local", {session: false}),
+    loginUserAsync,
+)
 router.post("/register", registerUserAsync)
+router.delete("/logout", logoutUserAsync)
 
 export default router
