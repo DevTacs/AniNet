@@ -11,6 +11,10 @@ import {
 } from "@/components/ui/card"
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
+import {zodResolver} from "@hookform/resolvers/zod"
+import {useForm} from "react-hook-form"
+import {loginSchema, type LoginSchemaInfer} from "@/schemas/auth.schema"
+import {useMutation} from "@tanstack/react-query"
 
 export const Route = createFileRoute("/auth/login")({
     component: RouteComponent,
@@ -18,6 +22,23 @@ export const Route = createFileRoute("/auth/login")({
 
 function RouteComponent() {
     const navigate = useNavigate()
+    const {
+        register,
+        handleSubmit,
+        formState: {errors},
+    } = useForm<LoginSchemaInfer>({
+        resolver: zodResolver(loginSchema),
+        defaultValues: {
+            username: "",
+            password: "",
+        },
+    })
+    const {mutateAsync} = useMutation({
+        mutationKey: ["login"],
+        mutationFn: async (data: LoginSchemaInfer) => {},
+    })
+
+    const handleOnSubmit = async (data: LoginSchemaInfer) => {}
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-background text-foreground">
@@ -45,17 +66,24 @@ function RouteComponent() {
                 </CardHeader>
 
                 <CardContent>
-                    <form className="space-y-5">
+                    <form
+                        className="space-y-5"
+                        onSubmit={handleSubmit(handleOnSubmit)}>
                         {/* Email */}
                         <div className="space-y-2">
-                            <Label htmlFor="email">Email</Label>
+                            <Label htmlFor="username">Username</Label>
                             <Input
-                                id="email"
-                                type="email"
-                                placeholder="Enter your email"
+                                id="username"
+                                type="string"
+                                placeholder="Enter your username"
                                 className="bg-white/5 border-white/10 focus:ring-2 focus:ring-accent"
-                                required
+                                {...register("username")}
                             />
+                            {errors.username && (
+                                <p className="text-red-500 text-sm mt-1">
+                                    {errors.username.message}
+                                </p>
+                            )}
                         </div>
 
                         {/* Password */}
@@ -67,10 +95,15 @@ function RouteComponent() {
                             <Input
                                 id="password"
                                 type="password"
-                                required
                                 placeholder="Enter password"
                                 className="bg-white/5 border-white/10 focus:ring-2 focus:ring-accent"
+                                {...register("password")}
                             />
+                            {errors.password && (
+                                <p className="text-red-500 text-sm mt-1">
+                                    {errors.password.message}
+                                </p>
+                            )}
                         </div>
                         <Button className="w-full bg-accent hover:bg-accent/80 text-white">
                             Login
