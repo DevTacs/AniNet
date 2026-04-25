@@ -8,6 +8,24 @@ export const Route = createFileRoute("/anime/browse")({
     component: RouteComponent,
 })
 
+function BrowseSkeleton() {
+    return (
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-5 mt-10">
+            {Array.from({length: 14}).map((_, i) => (
+                <div
+                    key={i}
+                    className="animate-pulse bg-white/5 border border-white/10 rounded-xl overflow-hidden">
+                    <div className="h-60 bg-white/10" />
+                    <div className="p-2 space-y-2">
+                        <div className="h-3 w-3/4 bg-white/10 rounded" />
+                        <div className="h-3 w-1/2 bg-white/10 rounded" />
+                    </div>
+                </div>
+            ))}
+        </div>
+    )
+}
+
 function RouteComponent() {
     const navigate = useNavigate()
 
@@ -29,7 +47,7 @@ function RouteComponent() {
     // ✅ restore from localStorage
     const [selectedCategory, setSelectedCategory] = useState<string>(genre[0])
 
-    const {data} = useQuery<AnimeDetails[]>({
+    const {data, isLoading} = useQuery<AnimeDetails[]>({
         queryKey: ["anime", "browse", selectedCategory],
         queryFn: () => getAnimeByCategory(selectedCategory, 1),
     })
@@ -67,36 +85,42 @@ function RouteComponent() {
             </div>
 
             {/* 🎬 Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-5 mt-10">
-                {data &&
-                    data.map((anime) => (
-                        <div
-                            key={anime._id}
-                            onClick={() =>
-                                navigate({to: `/anime/watch/${anime._id}`})
-                            }
-                            className="group cursor-pointer">
-                            <div className="relative overflow-hidden rounded-xl bg-white/5 hover:scale-105 transition">
-                                <img
-                                    src={anime.imagePath}
-                                    className="w-full h-60 object-cover"
-                                />
+            {isLoading ? (
+                <BrowseSkeleton />
+            ) : (
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-5 mt-10">
+                    {data &&
+                        data.map((anime) => (
+                            <div
+                                key={anime._id}
+                                onClick={() =>
+                                    navigate({
+                                        to: `/anime/watch/${anime._id}`,
+                                    })
+                                }
+                                className="group cursor-pointer">
+                                <div className="relative overflow-hidden rounded-xl bg-white/5 hover:scale-105 transition">
+                                    <img
+                                        src={anime.imagePath}
+                                        className="w-full h-60 object-cover"
+                                    />
 
-                                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-                                    <span className="bg-accent px-4 py-2 rounded text-sm font-medium">
-                                        ▶ Watch
-                                    </span>
+                                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                                        <span className="bg-accent px-4 py-2 rounded text-sm font-medium">
+                                            ▶ Watch
+                                        </span>
+                                    </div>
+
+                                    <div className="absolute bottom-0 left-0 right-0 h-16 bg-linear-to-t from-black/70 to-transparent" />
                                 </div>
 
-                                <div className="absolute bottom-0 left-0 right-0 h-16 bg-linear-to-t from-black/70 to-transparent" />
+                                <h3 className="text-sm mt-2 line-clamp-2 text-foreground/90 group-hover:text-foreground transition">
+                                    {anime.name}
+                                </h3>
                             </div>
-
-                            <h3 className="text-sm mt-2 line-clamp-2 text-foreground/90 group-hover:text-foreground transition">
-                                {anime.name}
-                            </h3>
-                        </div>
-                    ))}
-            </div>
+                        ))}
+                </div>
+            )}
         </div>
     )
 }
