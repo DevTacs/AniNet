@@ -8,7 +8,7 @@ export default function FeaturedCards({data}: {data: AnimeDetails[]}) {
         navigate({to: `/anime/watch/${slug}`})
 
     return (
-        <div className="mt-10">
+        <div className="">
             <h2 className="text-xl font-semibold mb-6">Featured Anime</h2>
 
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-5">

@@ -32,7 +32,6 @@ router.get(
 )
 router.get("/authenticated", (req, res) => {
     const token = req.cookies.authToken
-    console.log(req.cookies)
     if (!token) {
         return res.json(null)
     }

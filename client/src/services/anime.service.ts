@@ -2,11 +2,13 @@ import {api} from "@/configs/axios.config"
 import type {AnimeDetails, AnimeEpisode, AnimeInfo} from "@/types/anime.type"
 import {animeResponseMap, animeResponsesMap} from "@/utils/response-map.util"
 
-export const getFeaturedAnimeAsync = async (): Promise<AnimeDetails[]> => {
+export const getFeaturedAnimeAsync = async (
+    page: number,
+): Promise<AnimeDetails[]> => {
     try {
         const {
             data: {AniData},
-        } = await api.get("/anime/featured")
+        } = await api.get(`/anime/featured?page=${page}`)
 
         return animeResponsesMap(AniData)
     } catch (error) {
