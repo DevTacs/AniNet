@@ -19,7 +19,7 @@ export const googleCallbackAsync = async (req: Request, res: Response) => {
 
     const existingUser = await User.findOne({googleId: user.googleId})
     if (existingUser) {
-        return res.redirect(`${process.env.CLIENT_URL}/anime/browse`)
+        return res.redirect(`${process.env.CLIENT_URL}/anime/featured-anime`)
     }
 
     await User.create({
@@ -28,7 +28,7 @@ export const googleCallbackAsync = async (req: Request, res: Response) => {
         email: user.email,
         avatar: user.avatar,
     })
-    res.redirect(`${process.env.CLIENT_URL}/anime/browse`)
+    res.redirect(`${process.env.CLIENT_URL}/anime/featured-anime`)
 }
 
 export const getUserFromCookieAsync = async (req: Request, res: Response) => {

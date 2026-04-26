@@ -1,5 +1,6 @@
 import type {AnimeDetails} from "@/types/anime.type"
 import {useNavigate} from "@tanstack/react-router"
+import {PlayIcon} from "lucide-react"
 
 export default function FeaturedCards({data}: {data: AnimeDetails[]}) {
     const navigate = useNavigate()
@@ -28,8 +29,9 @@ export default function FeaturedCards({data}: {data: AnimeDetails[]}) {
 
                                 {/* Overlay */}
                                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-                                    <span className="bg-accent px-4 py-2 rounded text-sm font-medium">
-                                        ▶ Watch
+                                    <span className="bg-accent px-4 py-2 rounded text-sm font-medium flex flex-row items-center">
+                                        <PlayIcon className="w-4 h-4 mr-2" />
+                                        <span>Watch</span>
                                     </span>
                                 </div>
 

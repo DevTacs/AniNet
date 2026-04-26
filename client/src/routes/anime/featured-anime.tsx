@@ -4,7 +4,7 @@ import type {AnimeDetails} from "@/types/anime.type"
 import {useQuery} from "@tanstack/react-query"
 import {createFileRoute} from "@tanstack/react-router"
 import {useEffect, useState} from "react"
-
+import {useDebounce} from "use-debounce"
 import {
     Pagination,
     PaginationContent,
@@ -13,6 +13,7 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination"
+import {Search, X} from "lucide-react"
 
 export const Route = createFileRoute("/anime/featured-anime")({
     component: RouteComponent,
@@ -37,51 +38,93 @@ function FeaturedSkeleton() {
 }
 
 function RouteComponent() {
-    // ✔ restore selected page
+    const [search, setSearch] = useState("")
+    const [debouncedSearch] = useDebounce(search, 500)
+
+    // ✔ restore page
     const [page, setPage] = useState<number>(() => {
         return Number(localStorage.getItem("featured-page")) || 1
     })
 
-    // ✔ restore pages array
+    // ✔ restore pagination pages
     const [pages, setPages] = useState<number[]>(() => {
         const stored = localStorage.getItem("featured-pages")
         return stored ? JSON.parse(stored) : [1]
     })
 
-    // ✔ persist selected page
+    // ✔ persist page
     useEffect(() => {
         localStorage.setItem("featured-page", String(page))
     }, [page])
 
-    // ✔ persist pages array
+    // ✔ persist pages
     useEffect(() => {
         localStorage.setItem("featured-pages", JSON.stringify(pages))
     }, [pages])
 
+    // 🔁 reset page when searching
+    useEffect(() => {
+        setPage(1)
+        setPages([1])
+    }, [debouncedSearch])
+
     const {data, isLoading, isFetching} = useQuery<AnimeDetails[]>({
-        queryKey: ["anime", "featured", page],
-        queryFn: () => getFeaturedAnimeAsync(page),
+        queryKey: ["anime", "featured", page, debouncedSearch],
+        queryFn: () => getFeaturedAnimeAsync(debouncedSearch, page),
     })
 
     return (
         <div className="min-h-screen p-6 lg:p-10">
-            <div className="flex justify-end gap-3">
-                <input
-                    type="text"
-                    placeholder="Search anime..."
-                    className="w-75 border border-white/10 bg-white/5 px-4 py-2 rounded-lg outline-none focus:ring-2 focus:ring-accent transition"
-                />
-                <button className="bg-accent px-5 py-2 rounded-lg font-medium hover:bg-accent/80 transition">
-                    Search
-                </button>
+            {/* SEARCH BAR */}
+            <div className="w-full flex justify-center mb-6">
+                <div className="relative w-full max-w-xl">
+                    {/* Icon */}
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+
+                    {/* Input */}
+                    <input
+                        type="text"
+                        placeholder="Search anime (e.g. Naruto, One Piece...)"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        className="w-full pl-10 pr-10 py-2.5 rounded-xl 
+                        bg-white/5 border border-white/10 
+                        text-sm outline-none
+                        focus:ring-2 focus:ring-accent 
+                        focus:border-accent
+                        transition-all"
+                    />
+
+                    {/* Clear button */}
+                    {search && (
+                        <button
+                            onClick={() => setSearch("")}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-white transition">
+                            <X className="size-4" />
+                        </button>
+                    )}
+
+                    {/* Loading indicator */}
+                    {isFetching && (
+                        <div className="absolute right-8 top-1/2 -translate-y-1/2 text-xs text-muted-foreground animate-pulse">
+                            ...
+                        </div>
+                    )}
+                </div>
             </div>
+
             {/* FEATURED */}
             {isLoading ? (
                 <FeaturedSkeleton />
             ) : (
                 <>
-                    {isFetching && <div className="opacity-50 transition" />}
                     {data && <FeaturedCards data={data} />}
+
+                    {!isLoading && data?.length === 0 && (
+                        <p className="text-center mt-10 text-muted-foreground">
+                            No anime found.
+                        </p>
+                    )}
                 </>
             )}
 
@@ -103,7 +146,7 @@ function RouteComponent() {
                             />
                         </PaginationItem>
 
-                        {/* Pages (progressive) */}
+                        {/* Pages */}
                         {pages.map((p) => (
                             <PaginationItem key={p}>
                                 <PaginationLink

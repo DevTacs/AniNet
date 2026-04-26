@@ -1,10 +1,21 @@
 import {type Request, type Response} from "express"
-import {findByGenre, getInfo, getStreamingLinks, getTopRated} from "anipub"
+import {
+    findByGenre,
+    getInfo,
+    getStreamingLinks,
+    getTopRated,
+    searchAll,
+} from "anipub"
 
 export const getTopRatedAnimeAsync = async (req: Request, res: Response) => {
     try {
+        const {search} = req.query as {search?: string}
         const {page} = req.query as {page?: number}
 
+        if (search && page) {
+            const result = await searchAll(search, page)
+            return res.json(result)
+        }
         const result = await getTopRated(page)
         res.json(result)
     } catch (error) {

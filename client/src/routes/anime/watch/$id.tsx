@@ -16,8 +16,11 @@ export const Route = createFileRoute("/anime/watch/$id")({
 function RouteComponent() {
     const authData = Route.useLoaderData()
     const {id} = Route.useParams()
+
+    const storageKey = `anime-${id}-episode`
+
     const [selectedEpisode, setSelectedEpisode] = useState<string | undefined>(
-        "",
+        () => localStorage.getItem(storageKey) || "",
     )
 
     const [isBookmarked, setIsBookmarked] = useState(false)
@@ -26,16 +29,25 @@ function RouteComponent() {
         queryKey: ["anime", id],
         queryFn: () => getAnimeByIdAsync(Number(id)),
     })
+
     const {data: episodeData} = useQuery<AnimeEpisode[]>({
         queryKey: ["anime", id, "episodes"],
         queryFn: () => getEpisodesByIdAsync(Number(id)),
     })
 
+    // ✅ Set first episode ONLY if nothing saved
     useEffect(() => {
-        if (episodeData && episodeData.length > 0) {
+        if (!selectedEpisode && episodeData && episodeData.length > 0) {
             setSelectedEpisode(episodeData[0].src)
         }
-    }, [id, episodeData])
+    }, [episodeData, selectedEpisode])
+
+    // ✅ Save to localStorage whenever it changes
+    useEffect(() => {
+        if (selectedEpisode) {
+            localStorage.setItem(storageKey, selectedEpisode)
+        }
+    }, [selectedEpisode, storageKey])
 
     return (
         <div className="min-h-screen bg-background px-6 py-10 flex flex-col items-center justify-center">
@@ -88,6 +100,7 @@ function RouteComponent() {
                             {data?.description}
                         </p>
                     </div>
+
                     {authData && (
                         <button
                             className={`bg-accent text-foreground hover:bg-accent/80 py-2 px-4 rounded-md ${
@@ -112,9 +125,10 @@ function RouteComponent() {
                     </div>
                 </div>
             </div>
-            {/* PLAYER + EPISODES SECTION */}
+
+            {/* PLAYER + EPISODES */}
             <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-3 gap-6 mt-15">
-                {/* VIDEO PLAYER */}
+                {/* PLAYER */}
                 <div className="lg:col-span-2 space-y-3">
                     <h2 className="font-semibold text-lg">Now Playing</h2>
 
@@ -129,19 +143,27 @@ function RouteComponent() {
                     </div>
                 </div>
 
-                {/* EPISODES LIST */}
+                {/* EPISODES */}
                 <div className="space-y-3">
                     <h2 className="font-semibold text-lg">Episodes</h2>
 
                     <div className="h-100 overflow-y-auto border rounded-xl p-2 space-y-2">
-                        {episodeData?.map((ep) => (
-                            <button
-                                key={ep.ep}
-                                onClick={() => setSelectedEpisode(ep.src)}
-                                className="block px-3 py-2 rounded-lg hover:bg-primary/10 transition text-sm">
-                                Episode {ep.ep}
-                            </button>
-                        ))}
+                        {episodeData?.map((ep) => {
+                            const isActive = selectedEpisode === ep.src
+
+                            return (
+                                <button
+                                    key={ep.ep}
+                                    onClick={() => setSelectedEpisode(ep.src)}
+                                    className={`block w-full text-left px-3 py-2 rounded-lg transition text-sm ${
+                                        isActive
+                                            ? "bg-primary text-accent"
+                                            : "hover:bg-primary/10"
+                                    }`}>
+                                    Episode {ep.ep}
+                                </button>
+                            )
+                        })}
 
                         {!episodeData?.length && (
                             <p className="text-sm text-muted-foreground">
