@@ -47,12 +47,23 @@ export const getAnimeByCategory = async (
     page: number,
 ): Promise<AnimeDetails[]> => {
     try {
-        console.log(page)
         const {
             data: {wholePage},
         } = await api.get(`/anime/browse?genre=${genre}&page=${page}`)
 
         return animeResponsesMap(wholePage)
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
+
+export const addAnimeBookmarkAsync = async (
+    userId: number,
+    animeId: number,
+) => {
+    try {
+        await api.post("/anime/bookmark", {userId, animeId})
     } catch (error) {
         console.log(error)
         throw error
