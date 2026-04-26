@@ -13,7 +13,7 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination"
-import {Search, X} from "lucide-react"
+import {PackageOpen, Search, X} from "lucide-react"
 
 export const Route = createFileRoute("/anime/featured-anime")({
     component: RouteComponent,
@@ -68,7 +68,11 @@ function RouteComponent() {
         setPages([1])
     }, [debouncedSearch])
 
-    const {data, isLoading, isFetching} = useQuery<AnimeDetails[]>({
+    const {
+        data = [],
+        isLoading,
+        isFetching,
+    } = useQuery<AnimeDetails[]>({
         queryKey: ["anime", "featured", page, debouncedSearch],
         queryFn: () => getFeaturedAnimeAsync(debouncedSearch, page),
     })
@@ -114,73 +118,85 @@ function RouteComponent() {
             </div>
 
             {/* FEATURED */}
-            {isLoading ? (
+            {data && isLoading ? (
                 <FeaturedSkeleton />
             ) : (
                 <>
-                    {data && <FeaturedCards data={data} />}
+                    {data.length > 0 && <FeaturedCards data={data} />}
 
-                    {!isLoading && data?.length === 0 && (
-                        <p className="text-center mt-10 text-muted-foreground">
-                            No anime found.
-                        </p>
+                    {data.length === 0 && !isLoading && (
+                        <div className="mt-16 flex flex-col items-center justify-center text-center">
+                            <div className="text-4xl mb-3">
+                                <PackageOpen />
+                            </div>
+
+                            <h2 className="text-lg font-semibold text-white">
+                                No anime found
+                            </h2>
+
+                            <p className="text-sm text-muted-foreground mt-1 max-w-md">
+                                We couldn’t find anything matching your search.
+                                Try different keywords or clear your filter.
+                            </p>
+                        </div>
                     )}
                 </>
             )}
-
             {/* PAGINATION */}
-            <div className="mt-10 flex justify-center">
-                <Pagination>
-                    <PaginationContent>
-                        {/* Prev */}
-                        <PaginationItem>
-                            <PaginationPrevious
-                                className={
-                                    page === 1
-                                        ? "opacity-50 pointer-events-none"
-                                        : "cursor-pointer"
-                                }
-                                onClick={() =>
-                                    setPage((p) => Math.max(p - 1, 1))
-                                }
-                            />
-                        </PaginationItem>
-
-                        {/* Pages */}
-                        {pages.map((p) => (
-                            <PaginationItem key={p}>
-                                <PaginationLink
-                                    isActive={p === page}
-                                    onClick={() => setPage(p)}
+            {data.length > 0 && (
+                <div className="mt-10 flex justify-center">
+                    <Pagination>
+                        <PaginationContent>
+                            {/* Prev */}
+                            <PaginationItem>
+                                <PaginationPrevious
                                     className={
-                                        p === page
-                                            ? "bg-accent text-white"
+                                        page === 1
+                                            ? "opacity-50 pointer-events-none"
                                             : "cursor-pointer"
-                                    }>
-                                    {p}
-                                </PaginationLink>
+                                    }
+                                    onClick={() =>
+                                        setPage((p) => Math.max(p - 1, 1))
+                                    }
+                                />
                             </PaginationItem>
-                        ))}
 
-                        {/* Next */}
-                        <PaginationItem>
-                            <PaginationNext
-                                onClick={() => {
-                                    const nextPage = page + 1
+                            {/* Pages */}
+                            {pages.map((p) => (
+                                <PaginationItem key={p}>
+                                    <PaginationLink
+                                        isActive={p === page}
+                                        onClick={() => setPage(p)}
+                                        className={
+                                            p === page
+                                                ? "bg-accent text-white"
+                                                : "cursor-pointer"
+                                        }>
+                                        {p}
+                                    </PaginationLink>
+                                </PaginationItem>
+                            ))}
 
-                                    setPage(nextPage)
+                            {/* Next */}
+                            <PaginationItem>
+                                <PaginationNext
+                                    onClick={() => {
+                                        const nextPage = page + 1
 
-                                    setPages((prev) =>
-                                        prev.includes(nextPage)
-                                            ? prev
-                                            : [...prev, nextPage],
-                                    )
-                                }}
-                            />
-                        </PaginationItem>
-                    </PaginationContent>
-                </Pagination>
-            </div>
+                                        setPage(nextPage)
+
+                                        setPages((prev) =>
+                                            prev.includes(nextPage)
+                                                ? prev
+                                                : [...prev, nextPage],
+                                        )
+                                    }}
+                                />
+                            </PaginationItem>
+                        </PaginationContent>
+                    </Pagination>
+                </div>
+            )}
         </div>
     )
 }

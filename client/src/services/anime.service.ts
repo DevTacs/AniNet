@@ -8,7 +8,7 @@ export const getFeaturedAnimeAsync = async (
 ): Promise<AnimeDetails[]> => {
     try {
         const {
-            data: {AniData},
+            data: {AniData = []},
         } = await api.get(`/anime/featured?search=${search}&page=${page}`)
 
         return animeResponsesMap(AniData)

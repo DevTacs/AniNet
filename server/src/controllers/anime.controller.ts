@@ -6,6 +6,7 @@ import {
     getTopRated,
     searchAll,
 } from "anipub"
+import Bookmark from "../models/bookmarks.model.js"
 
 export const getTopRatedAnimeAsync = async (req: Request, res: Response) => {
     try {
@@ -59,6 +60,26 @@ export const getAnimeByCategory = async (req: Request, res: Response) => {
 
         const anime = await findByGenre(genre)
         res.json(anime)
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({message: "Internal server error"})
+    }
+}
+
+export const addAnimeBookmarkAsync = async (req: Request, res: Response) => {
+    try {
+        const {userId, animeId} = req.body
+
+        const anime = await getInfo(animeId)
+
+        await Bookmark.create({
+            user: userId,
+            animeId,
+            Name: anime.Name,
+            ImagePath: anime.ImagePath,
+        })
+
+        res.json({message: "Bookmark added successfully"})
     } catch (error) {
         console.log(error)
         res.status(500).json({message: "Internal server error"})

@@ -148,10 +148,40 @@ function RouteComponent() {
                         onClick={handleGoogleLogin}
                         variant="outline"
                         className="w-full border-white/10 bg-white/5 hover:bg-white/10">
+                        <GoogleIcon />
                         Continue with Google
                     </Button>
                 </CardFooter>
             </Card>
         </div>
+    )
+}
+
+function GoogleIcon() {
+    return (
+        <svg width="18" height="18" viewBox="0 0 48 48">
+            <path
+                fill="#FFC107"
+                d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.4 36 24 36
+                c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1
+                l5.7-5.7C33.5 6.1 28.9 4 24 4 12.9 4 4 12.9 4 24s8.9 20
+                20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-4z"
+            />
+            <path
+                fill="#FF3D00"
+                d="M6.3 14.7l6.6 4.8C14.5 16 18.9 12 24 12c3.1 0 5.9 1.2 8 3.1
+                l5.7-5.7C33.5 6.1 28.9 4 24 4 16.3 4 9.6 8.4 6.3 14.7z"
+            />
+            <path
+                fill="#4CAF50"
+                d="M24 44c5.3 0 10.1-2 13.7-5.3l-6.3-5.2C29.4 36 27 37 24 37
+                c-5.4 0-9.9-3.3-11.7-8.1l-6.6 5.1C9 39.6 15.9 44 24 44z"
+            />
+            <path
+                fill="#1976D2"
+                d="M43.6 20.5H42V20H24v8h11.3c-1.1 3-3.5 5.4-6.6 6.8
+                l6.3 5.2C38.6 37.6 44 31.6 44 24c0-1.3-.1-2.7-.4-4z"
+            />
+        </svg>
     )
 }
