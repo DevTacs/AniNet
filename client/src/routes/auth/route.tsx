@@ -7,7 +7,7 @@ export const Route = createFileRoute("/auth")({
         const response = await api.get("/auth/authenticated")
         if (response.data) {
             throw redirect({
-                to: "/anime/browse",
+                to: "/anime/featured-anime",
             })
         }
     },

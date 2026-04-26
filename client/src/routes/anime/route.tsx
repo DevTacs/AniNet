@@ -38,16 +38,6 @@ function RootComponent() {
                             className:
                                 "text-foreground font-semibold border-b-2 border-accent pb-1",
                         }}>
-                        Featured
-                    </Link>
-
-                    <Link
-                        to="/anime/browse"
-                        className="text-sm text-foreground/70 hover:text-foreground transition"
-                        activeProps={{
-                            className:
-                                "text-foreground font-semibold border-b-2 border-accent pb-1",
-                        }}>
                         Browse
                     </Link>
 

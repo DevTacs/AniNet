@@ -14,7 +14,6 @@ import { Route as AnimeRouteRouteImport } from './routes/anime/route'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AnimeFeaturedAnimeRouteImport } from './routes/anime/featured-anime'
-import { Route as AnimeBrowseRouteImport } from './routes/anime/browse'
 import { Route as AnimeBookmarkRouteImport } from './routes/anime/bookmark'
 import { Route as AnimeWatchIdRouteImport } from './routes/anime/watch/$id'
 
@@ -43,11 +42,6 @@ const AnimeFeaturedAnimeRoute = AnimeFeaturedAnimeRouteImport.update({
   path: '/featured-anime',
   getParentRoute: () => AnimeRouteRoute,
 } as any)
-const AnimeBrowseRoute = AnimeBrowseRouteImport.update({
-  id: '/browse',
-  path: '/browse',
-  getParentRoute: () => AnimeRouteRoute,
-} as any)
 const AnimeBookmarkRoute = AnimeBookmarkRouteImport.update({
   id: '/bookmark',
   path: '/bookmark',
@@ -63,7 +57,6 @@ export interface FileRoutesByFullPath {
   '/anime': typeof AnimeRouteRouteWithChildren
   '/auth': typeof AuthRouteRouteWithChildren
   '/anime/bookmark': typeof AnimeBookmarkRoute
-  '/anime/browse': typeof AnimeBrowseRoute
   '/anime/featured-anime': typeof AnimeFeaturedAnimeRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
@@ -73,7 +66,6 @@ export interface FileRoutesByTo {
   '/anime': typeof AnimeRouteRouteWithChildren
   '/auth': typeof AuthRouteRouteWithChildren
   '/anime/bookmark': typeof AnimeBookmarkRoute
-  '/anime/browse': typeof AnimeBrowseRoute
   '/anime/featured-anime': typeof AnimeFeaturedAnimeRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
@@ -84,7 +76,6 @@ export interface FileRoutesById {
   '/anime': typeof AnimeRouteRouteWithChildren
   '/auth': typeof AuthRouteRouteWithChildren
   '/anime/bookmark': typeof AnimeBookmarkRoute
-  '/anime/browse': typeof AnimeBrowseRoute
   '/anime/featured-anime': typeof AnimeFeaturedAnimeRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
@@ -96,7 +87,6 @@ export interface FileRouteTypes {
     | '/anime'
     | '/auth'
     | '/anime/bookmark'
-    | '/anime/browse'
     | '/anime/featured-anime'
     | '/auth/login'
     | '/auth/register'
@@ -106,7 +96,6 @@ export interface FileRouteTypes {
     | '/anime'
     | '/auth'
     | '/anime/bookmark'
-    | '/anime/browse'
     | '/anime/featured-anime'
     | '/auth/login'
     | '/auth/register'
@@ -116,7 +105,6 @@ export interface FileRouteTypes {
     | '/anime'
     | '/auth'
     | '/anime/bookmark'
-    | '/anime/browse'
     | '/anime/featured-anime'
     | '/auth/login'
     | '/auth/register'
@@ -165,13 +153,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AnimeFeaturedAnimeRouteImport
       parentRoute: typeof AnimeRouteRoute
     }
-    '/anime/browse': {
-      id: '/anime/browse'
-      path: '/browse'
-      fullPath: '/anime/browse'
-      preLoaderRoute: typeof AnimeBrowseRouteImport
-      parentRoute: typeof AnimeRouteRoute
-    }
     '/anime/bookmark': {
       id: '/anime/bookmark'
       path: '/bookmark'
@@ -191,14 +172,12 @@ declare module '@tanstack/react-router' {
 
 interface AnimeRouteRouteChildren {
   AnimeBookmarkRoute: typeof AnimeBookmarkRoute
-  AnimeBrowseRoute: typeof AnimeBrowseRoute
   AnimeFeaturedAnimeRoute: typeof AnimeFeaturedAnimeRoute
   AnimeWatchIdRoute: typeof AnimeWatchIdRoute
 }
 
 const AnimeRouteRouteChildren: AnimeRouteRouteChildren = {
   AnimeBookmarkRoute: AnimeBookmarkRoute,
-  AnimeBrowseRoute: AnimeBrowseRoute,
   AnimeFeaturedAnimeRoute: AnimeFeaturedAnimeRoute,
   AnimeWatchIdRoute: AnimeWatchIdRoute,
 }

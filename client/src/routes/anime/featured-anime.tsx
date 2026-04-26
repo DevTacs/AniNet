@@ -20,7 +20,7 @@ export const Route = createFileRoute("/anime/featured-anime")({
 
 function FeaturedSkeleton() {
     return (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 mt-10">
             {Array.from({length: 10}).map((_, i) => (
                 <div
                     key={i}
@@ -61,11 +61,20 @@ function RouteComponent() {
     const {data, isLoading, isFetching} = useQuery<AnimeDetails[]>({
         queryKey: ["anime", "featured", page],
         queryFn: () => getFeaturedAnimeAsync(page),
-        keepPreviousData: true,
     })
 
     return (
         <div className="min-h-screen p-6 lg:p-10">
+            <div className="flex justify-end gap-3">
+                <input
+                    type="text"
+                    placeholder="Search anime..."
+                    className="w-75 border border-white/10 bg-white/5 px-4 py-2 rounded-lg outline-none focus:ring-2 focus:ring-accent transition"
+                />
+                <button className="bg-accent px-5 py-2 rounded-lg font-medium hover:bg-accent/80 transition">
+                    Search
+                </button>
+            </div>
             {/* FEATURED */}
             {isLoading ? (
                 <FeaturedSkeleton />
