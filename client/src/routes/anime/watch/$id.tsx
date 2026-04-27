@@ -1,7 +1,12 @@
 import {api} from "@/configs/axios.config"
-import {getAnimeByIdAsync, getEpisodesByIdAsync} from "@/services/anime.service"
+import {
+    addAnimeBookmarkAsync,
+    checkBookmarkAsync,
+    getAnimeByIdAsync,
+    getEpisodesByIdAsync,
+} from "@/services/anime.service"
 import type {AnimeEpisode, AnimeInfo} from "@/types/anime.type"
-import {useQuery} from "@tanstack/react-query"
+import {useMutation, useQuery} from "@tanstack/react-query"
 import {createFileRoute} from "@tanstack/react-router"
 import {useEffect, useState} from "react"
 
@@ -23,17 +28,37 @@ function RouteComponent() {
         () => localStorage.getItem(storageKey) || "",
     )
 
-    const [isBookmarked, setIsBookmarked] = useState(false)
-
     const {data} = useQuery<AnimeInfo>({
         queryKey: ["anime", id],
         queryFn: () => getAnimeByIdAsync(Number(id)),
+    })
+
+    const {data: isBookmarked} = useQuery({
+        queryKey: ["bookmark", id],
+        queryFn: () => checkBookmarkAsync(Number(id)),
     })
 
     const {data: episodeData} = useQuery<AnimeEpisode[]>({
         queryKey: ["anime", id, "episodes"],
         queryFn: () => getEpisodesByIdAsync(Number(id)),
     })
+
+    const {mutateAsync} = useMutation({
+        mutationKey: ["bookmark"],
+        mutationFn: async ({animeId}: {animeId: number}) =>
+            addAnimeBookmarkAsync(animeId),
+    })
+
+    const handleOnBookmarkClickAsync = async () => {
+        try {
+            const payload = {
+                animeId: Number(id),
+            }
+            await mutateAsync(payload)
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     // ✅ Set first episode ONLY if nothing saved
     useEffect(() => {
@@ -108,7 +133,7 @@ function RouteComponent() {
                                     ? "bg-green-500 hover:bg-green-600"
                                     : ""
                             }`}
-                            onClick={() => setIsBookmarked(!isBookmarked)}>
+                            onClick={() => handleOnBookmarkClickAsync()}>
                             {isBookmarked ? "Remove Bookmark" : "Bookmark"}
                         </button>
                     )}

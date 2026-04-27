@@ -7,6 +7,8 @@ import {
     searchAll,
 } from "anipub"
 import Bookmark from "../models/bookmarks.model.js"
+import mongoose from "mongoose"
+import {JwtPayload} from "../types/auth.type.js"
 
 export const getTopRatedAnimeAsync = async (req: Request, res: Response) => {
     try {
@@ -68,9 +70,12 @@ export const getAnimeByCategory = async (req: Request, res: Response) => {
 
 export const checkBookmark = async (req: Request, res: Response) => {
     try {
-        const {userId, animeId} = req.body
+        const user = req.user as JwtPayload
+        const objectId = new mongoose.Types.ObjectId(user.id)
+        const animeId = Number(req.query.animeId)
 
-        const exists = await Bookmark.exists({user: userId, animeId})
+        const exists = await Bookmark.exists({user: objectId, animeId})
+        if (!exists) return res.json({exists: false})
 
         res.json({exists})
     } catch (error) {
@@ -81,12 +86,13 @@ export const checkBookmark = async (req: Request, res: Response) => {
 
 export const addAnimeBookmarkAsync = async (req: Request, res: Response) => {
     try {
-        const {userId, animeId} = req.body
+        const user = req.user as JwtPayload
+        const {animeId} = req.body
 
         const anime = await getInfo(animeId)
 
         await Bookmark.create({
-            user: userId,
+            user: user.id,
             animeId,
             Name: anime.Name,
             ImagePath: anime.ImagePath,

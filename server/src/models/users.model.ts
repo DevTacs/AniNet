@@ -24,7 +24,6 @@ const userSchema = new mongoose.Schema({
     },
     avatar: {
         type: String,
-        required: false,
         default: "https://github.com/shadcn.png",
     },
 })

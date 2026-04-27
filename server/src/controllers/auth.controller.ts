@@ -1,12 +1,19 @@
 import {Request, Response} from "express"
-import {AuthUser, GoogleUser} from "../types/auth.type.js"
-import jwt from "jsonwebtoken"
+import {AuthUser} from "../types/auth.type.js"
+import jwt, {JwtPayload} from "jsonwebtoken"
 import User from "../models/users.model.js"
 import bcrypt from "bcrypt"
 
 export const googleCallbackAsync = async (req: Request, res: Response) => {
     const user = req.user as AuthUser
-    const token = jwt.sign(user, process.env.JWT_SECRET!, {
+
+    const payload: JwtPayload = {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        avatar: user.avatar,
+    }
+    const token = jwt.sign(payload, process.env.JWT_SECRET!, {
         expiresIn: "1d",
     })
 
@@ -15,18 +22,6 @@ export const googleCallbackAsync = async (req: Request, res: Response) => {
         secure: process.env.ENVIRONMENT === "production", // true in production (HTTPS)
         sameSite: "lax",
         maxAge: 3600000, // 1 hour
-    })
-
-    const existingUser = await User.findOne({googleId: user.googleId})
-    if (existingUser) {
-        return res.redirect(`${process.env.CLIENT_URL}/anime/featured-anime`)
-    }
-
-    await User.create({
-        googleId: user.googleId,
-        username: user.username,
-        email: user.email,
-        avatar: user.avatar,
     })
     res.redirect(`${process.env.CLIENT_URL}/anime/featured-anime`)
 }
@@ -52,18 +47,16 @@ export const getMeAsync = async (req: Request, res: Response) => {
 export const loginUserAsync = async (req: Request, res: Response) => {
     try {
         const user = req.user as AuthUser
-        console.log(user)
+
         if (!user) return res.status(401).json({message: "User not found"})
 
-        const token = jwt.sign(
-            {
-                id: user.id,
-                username: user.username,
-                email: user.email,
-                avatar: user.avatar,
-            },
-            process.env.JWT_SECRET!,
-        )
+        const payload: JwtPayload = {
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            avatar: user.avatar,
+        }
+        const token = jwt.sign(payload, process.env.JWT_SECRET!)
 
         res.cookie("authToken", token, {
             httpOnly: true, // 👈 cannot be accessed by JS

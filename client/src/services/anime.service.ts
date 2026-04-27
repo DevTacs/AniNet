@@ -59,25 +59,23 @@ export const getAnimeByCategory = async (
     }
 }
 
-export const checkBookmarkAsync = async (userId: number, animeId: number) => {
+export const checkBookmarkAsync = async (animeId: number) => {
     try {
-        const result = await api.get("/anime/bookmarked", {
-            params: {userId, animeId},
+        const {
+            data: {exists},
+        } = await api.get("/anime/bookmarked", {
+            params: {animeId},
         })
-        console.log(result)
-        return {result}
+        return exists
     } catch (error) {
         console.log(error)
         throw error
     }
 }
 
-export const addAnimeBookmarkAsync = async (
-    userId: number,
-    animeId: number,
-) => {
+export const addAnimeBookmarkAsync = async (animeId: number) => {
     try {
-        await api.post("/anime/bookmark", {userId, animeId})
+        await api.post("/anime/bookmark", {animeId})
     } catch (error) {
         console.log(error)
         throw error

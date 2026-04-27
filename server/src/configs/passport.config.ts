@@ -1,9 +1,9 @@
 import passport from "passport"
 import {Strategy as GoogleStrategy} from "passport-google-oauth20"
 import {Strategy as LocalStrategy} from "passport-local"
-import {GoogleUser} from "../types/auth.type.js"
 import bcrypt from "bcrypt"
 import User from "../models/users.model.js"
+import {JwtPayload} from "../types/auth.type.js"
 
 if (!process.env.GOOGLE_CLIENT_ID) {
     throw new Error("GOOGLE_CLIENT_ID is not defined in environment variables")
@@ -20,17 +20,25 @@ passport.use(
         {
             clientID: process.env.GOOGLE_CLIENT_ID!,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-            callbackURL: `${process.env.SERVER_URL}/api/auth/google/callback`,
+            callbackURL: "/auth/google/callback",
         },
         async (_, __, profile, done) => {
-            const user: GoogleUser = {
-                googleId: profile.id,
-                username: profile.displayName,
-                email: profile.emails?.[0].value!,
-                avatar: profile.photos?.[0].value!,
-            }
+            try {
+                let user = await User.findOne({googleId: profile.id})
 
-            return done(null, user)
+                if (!user) {
+                    user = await User.create({
+                        googleId: profile.id,
+                        username: profile.displayName,
+                        email: profile.emails?.[0].value,
+                        avatar: profile.photos?.[0].value,
+                    })
+                }
+
+                return done(null, user)
+            } catch (err) {
+                return done(err, false)
+            }
         },
     ),
 )
