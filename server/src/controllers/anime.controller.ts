@@ -55,7 +55,7 @@ export const getEpisodesByIdAsync = async (
     }
 }
 
-export const getAnimeByCategory = async (req: Request, res: Response) => {
+export const getAnimeByCategoryAsync = async (req: Request, res: Response) => {
     try {
         const genre = req.query.genre as string
         const page = Number(req.query.page)
@@ -68,7 +68,7 @@ export const getAnimeByCategory = async (req: Request, res: Response) => {
     }
 }
 
-export const checkBookmark = async (req: Request, res: Response) => {
+export const checkBookmarkAsync = async (req: Request, res: Response) => {
     try {
         const user = req.user as JwtPayload
         const objectId = new mongoose.Types.ObjectId(user.id)
@@ -84,21 +84,32 @@ export const checkBookmark = async (req: Request, res: Response) => {
     }
 }
 
-export const addAnimeBookmarkAsync = async (req: Request, res: Response) => {
+export const toggleAnimeBookmarkAsync = async (req: Request, res: Response) => {
     try {
         const user = req.user as JwtPayload
         const {animeId} = req.body
 
-        const anime = await getInfo(animeId)
+        const exist = await Bookmark.where("animeId", animeId)
+        if (exist.length == 0) {
+            const anime = await getInfo(animeId)
 
-        await Bookmark.create({
-            user: user.id,
-            animeId,
-            Name: anime.Name,
-            ImagePath: anime.ImagePath,
-        })
+            if (!anime)
+                return res.status(404).json({message: "Anime not found"})
 
-        res.json({message: "Bookmark added successfully"})
+            await Bookmark.create({
+                user: user.id,
+                animeId,
+                Name: anime.Name,
+                ImagePath: anime.ImagePath,
+            })
+
+            return res.json({message: "Bookmark added successfully"})
+        }
+
+        const objectId = new mongoose.Types.ObjectId(user.id)
+        await Bookmark.deleteOne({user: objectId, animeId})
+
+        res.json({message: "Bookmark removed successfully"})
     } catch (error) {
         console.log(error)
         res.status(500).json({message: "Internal server error"})

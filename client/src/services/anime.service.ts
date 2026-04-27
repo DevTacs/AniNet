@@ -1,7 +1,6 @@
 import {api} from "@/configs/axios.config"
 import type {AnimeDetails, AnimeEpisode, AnimeInfo} from "@/types/anime.type"
 import {animeResponseMap, animeResponsesMap} from "@/utils/response-map.util"
-import {Bookmark} from "lucide-react"
 
 export const getFeaturedAnimeAsync = async (
     search: string,
@@ -63,7 +62,7 @@ export const checkBookmarkAsync = async (animeId: number) => {
     try {
         const {
             data: {exists},
-        } = await api.get("/anime/bookmarked", {
+        } = await api.get("/anime/bookmark", {
             params: {animeId},
         })
         return exists
@@ -73,9 +72,10 @@ export const checkBookmarkAsync = async (animeId: number) => {
     }
 }
 
-export const addAnimeBookmarkAsync = async (animeId: number) => {
+export const toggleAnimeBookmarkAsync = async (animeId: number) => {
     try {
-        await api.post("/anime/bookmark", {animeId})
+        console.log("first")
+        await api.put("/anime/bookmark", {animeId})
     } catch (error) {
         console.log(error)
         throw error

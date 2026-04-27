@@ -1,12 +1,12 @@
 import {api} from "@/configs/axios.config"
 import {
-    addAnimeBookmarkAsync,
     checkBookmarkAsync,
     getAnimeByIdAsync,
     getEpisodesByIdAsync,
+    toggleAnimeBookmarkAsync,
 } from "@/services/anime.service"
 import type {AnimeEpisode, AnimeInfo} from "@/types/anime.type"
-import {useMutation, useQuery} from "@tanstack/react-query"
+import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query"
 import {createFileRoute} from "@tanstack/react-router"
 import {useEffect, useState} from "react"
 
@@ -20,6 +20,7 @@ export const Route = createFileRoute("/anime/watch/$id")({
 
 function RouteComponent() {
     const authData = Route.useLoaderData()
+    const queryClient = useQueryClient()
     const {id} = Route.useParams()
 
     const storageKey = `anime-${id}-episode`
@@ -43,10 +44,15 @@ function RouteComponent() {
         queryFn: () => getEpisodesByIdAsync(Number(id)),
     })
 
-    const {mutateAsync} = useMutation({
+    const {mutateAsync, isPending} = useMutation({
         mutationKey: ["bookmark"],
         mutationFn: async ({animeId}: {animeId: number}) =>
-            addAnimeBookmarkAsync(animeId),
+            toggleAnimeBookmarkAsync(animeId),
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({
+                queryKey: ["bookmark", id],
+            })
+        },
     })
 
     const handleOnBookmarkClickAsync = async () => {
@@ -128,11 +134,12 @@ function RouteComponent() {
 
                     {authData && (
                         <button
-                            className={`bg-accent text-foreground hover:bg-accent/80 py-2 px-4 rounded-md ${
+                            disabled={isPending}
+                            className={`py-2 px-4 rounded-md transition ${
                                 isBookmarked
                                     ? "bg-green-500 hover:bg-green-600"
-                                    : ""
-                            }`}
+                                    : "bg-accent hover:bg-accent/80"
+                            } ${isPending ? "opacity-50 cursor-not-allowed" : ""}`}
                             onClick={() => handleOnBookmarkClickAsync()}>
                             {isBookmarked ? "Remove Bookmark" : "Bookmark"}
                         </button>
