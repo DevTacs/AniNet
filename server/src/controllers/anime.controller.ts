@@ -66,6 +66,19 @@ export const getAnimeByCategory = async (req: Request, res: Response) => {
     }
 }
 
+export const checkBookmark = async (req: Request, res: Response) => {
+    try {
+        const {userId, animeId} = req.body
+
+        const exists = await Bookmark.exists({user: userId, animeId})
+
+        res.json(exists)
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({message: "Internal server error"})
+    }
+}
+
 export const addAnimeBookmarkAsync = async (req: Request, res: Response) => {
     try {
         const {userId, animeId} = req.body

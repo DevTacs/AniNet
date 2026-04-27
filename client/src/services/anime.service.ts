@@ -1,6 +1,7 @@
 import {api} from "@/configs/axios.config"
 import type {AnimeDetails, AnimeEpisode, AnimeInfo} from "@/types/anime.type"
 import {animeResponseMap, animeResponsesMap} from "@/utils/response-map.util"
+import {Bookmark} from "lucide-react"
 
 export const getFeaturedAnimeAsync = async (
     search: string,
