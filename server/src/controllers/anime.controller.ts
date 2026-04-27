@@ -72,7 +72,7 @@ export const checkBookmark = async (req: Request, res: Response) => {
 
         const exists = await Bookmark.exists({user: userId, animeId})
 
-        res.json(exists)
+        res.json({exists})
     } catch (error) {
         console.log(error)
         res.status(500).json({message: "Internal server error"})

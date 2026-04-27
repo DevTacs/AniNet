@@ -59,6 +59,19 @@ export const getAnimeByCategory = async (
     }
 }
 
+export const checkBookmarkAsync = async (userId: number, animeId: number) => {
+    try {
+        const result = await api.get("/anime/bookmarked", {
+            params: {userId, animeId},
+        })
+        console.log(result)
+        return {result}
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
+
 export const addAnimeBookmarkAsync = async (
     userId: number,
     animeId: number,
