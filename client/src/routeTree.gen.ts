@@ -13,7 +13,7 @@ import { Route as AuthRouteRouteImport } from './routes/auth/route'
 import { Route as AnimeRouteRouteImport } from './routes/anime/route'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
-import { Route as AnimeFeaturedAnimeRouteImport } from './routes/anime/featured-anime'
+import { Route as AnimeBrowseRouteImport } from './routes/anime/browse'
 import { Route as AnimeBookmarkRouteImport } from './routes/anime/bookmark'
 import { Route as AnimeWatchIdRouteImport } from './routes/anime/watch/$id'
 
@@ -37,9 +37,9 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => AuthRouteRoute,
 } as any)
-const AnimeFeaturedAnimeRoute = AnimeFeaturedAnimeRouteImport.update({
-  id: '/featured-anime',
-  path: '/featured-anime',
+const AnimeBrowseRoute = AnimeBrowseRouteImport.update({
+  id: '/browse',
+  path: '/browse',
   getParentRoute: () => AnimeRouteRoute,
 } as any)
 const AnimeBookmarkRoute = AnimeBookmarkRouteImport.update({
@@ -57,7 +57,7 @@ export interface FileRoutesByFullPath {
   '/anime': typeof AnimeRouteRouteWithChildren
   '/auth': typeof AuthRouteRouteWithChildren
   '/anime/bookmark': typeof AnimeBookmarkRoute
-  '/anime/featured-anime': typeof AnimeFeaturedAnimeRoute
+  '/anime/browse': typeof AnimeBrowseRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/anime/watch/$id': typeof AnimeWatchIdRoute
@@ -66,7 +66,7 @@ export interface FileRoutesByTo {
   '/anime': typeof AnimeRouteRouteWithChildren
   '/auth': typeof AuthRouteRouteWithChildren
   '/anime/bookmark': typeof AnimeBookmarkRoute
-  '/anime/featured-anime': typeof AnimeFeaturedAnimeRoute
+  '/anime/browse': typeof AnimeBrowseRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/anime/watch/$id': typeof AnimeWatchIdRoute
@@ -76,7 +76,7 @@ export interface FileRoutesById {
   '/anime': typeof AnimeRouteRouteWithChildren
   '/auth': typeof AuthRouteRouteWithChildren
   '/anime/bookmark': typeof AnimeBookmarkRoute
-  '/anime/featured-anime': typeof AnimeFeaturedAnimeRoute
+  '/anime/browse': typeof AnimeBrowseRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/anime/watch/$id': typeof AnimeWatchIdRoute
@@ -87,7 +87,7 @@ export interface FileRouteTypes {
     | '/anime'
     | '/auth'
     | '/anime/bookmark'
-    | '/anime/featured-anime'
+    | '/anime/browse'
     | '/auth/login'
     | '/auth/register'
     | '/anime/watch/$id'
@@ -96,7 +96,7 @@ export interface FileRouteTypes {
     | '/anime'
     | '/auth'
     | '/anime/bookmark'
-    | '/anime/featured-anime'
+    | '/anime/browse'
     | '/auth/login'
     | '/auth/register'
     | '/anime/watch/$id'
@@ -105,7 +105,7 @@ export interface FileRouteTypes {
     | '/anime'
     | '/auth'
     | '/anime/bookmark'
-    | '/anime/featured-anime'
+    | '/anime/browse'
     | '/auth/login'
     | '/auth/register'
     | '/anime/watch/$id'
@@ -146,11 +146,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof AuthRouteRoute
     }
-    '/anime/featured-anime': {
-      id: '/anime/featured-anime'
-      path: '/featured-anime'
-      fullPath: '/anime/featured-anime'
-      preLoaderRoute: typeof AnimeFeaturedAnimeRouteImport
+    '/anime/browse': {
+      id: '/anime/browse'
+      path: '/browse'
+      fullPath: '/anime/browse'
+      preLoaderRoute: typeof AnimeBrowseRouteImport
       parentRoute: typeof AnimeRouteRoute
     }
     '/anime/bookmark': {
@@ -172,13 +172,13 @@ declare module '@tanstack/react-router' {
 
 interface AnimeRouteRouteChildren {
   AnimeBookmarkRoute: typeof AnimeBookmarkRoute
-  AnimeFeaturedAnimeRoute: typeof AnimeFeaturedAnimeRoute
+  AnimeBrowseRoute: typeof AnimeBrowseRoute
   AnimeWatchIdRoute: typeof AnimeWatchIdRoute
 }
 
 const AnimeRouteRouteChildren: AnimeRouteRouteChildren = {
   AnimeBookmarkRoute: AnimeBookmarkRoute,
-  AnimeFeaturedAnimeRoute: AnimeFeaturedAnimeRoute,
+  AnimeBrowseRoute: AnimeBrowseRoute,
   AnimeWatchIdRoute: AnimeWatchIdRoute,
 }
 

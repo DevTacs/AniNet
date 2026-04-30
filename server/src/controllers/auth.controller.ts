@@ -23,7 +23,7 @@ export const googleCallbackAsync = async (req: Request, res: Response) => {
         sameSite: "lax",
         maxAge: 3600000, // 1 hour
     })
-    res.redirect(`${process.env.CLIENT_URL}/anime/featured-anime`)
+    res.redirect(`${process.env.CLIENT_URL}/anime/browse`)
 }
 
 export const getUserFromCookieAsync = async (req: Request, res: Response) => {

@@ -7,8 +7,21 @@ import {
     PaginationPrevious,
 } from "@/components/ui/pagination"
 import {api} from "@/configs/axios.config"
-import {createFileRoute, redirect} from "@tanstack/react-router"
-import {useState} from "react"
+import {getAnimeBookmarksAsync} from "@/services/anime.service"
+import {useQuery} from "@tanstack/react-query"
+import {createFileRoute, redirect, useNavigate} from "@tanstack/react-router"
+import {PlayIcon} from "lucide-react"
+import {useEffect, useState} from "react"
+import {useDebounce} from "use-debounce"
+
+type AnimeDetails = {
+    _id: string
+    user: string
+    animeId: string
+    name: string
+    imagePath: string
+    genre: string[]
+}
 
 export const Route = createFileRoute("/anime/bookmark")({
     component: RouteComponent,
@@ -21,7 +34,9 @@ export const Route = createFileRoute("/anime/bookmark")({
 
 function RouteComponent() {
     const [page, setPage] = useState(1)
+    const navigate = useNavigate()
     const genre: string[] = [
+        "all",
         "action",
         "romance",
         "harem",
@@ -35,6 +50,21 @@ function RouteComponent() {
         "shounen",
         "magic",
     ]
+
+    const [search, setSearch] = useState("")
+    const [debounceSearch] = useDebounce(search, 500)
+    const [selectCategory, setSelectedCategory] = useState(genre[0])
+
+    const {data, isFetching} = useQuery({
+        queryKey: ["bookmarks", page, debounceSearch, selectCategory],
+        queryFn: () =>
+            getAnimeBookmarksAsync(debounceSearch, page, selectCategory),
+    })
+
+    useEffect(() => {
+        setPage(1)
+    }, [debounceSearch, selectCategory])
+
     return (
         <div className="min-h-screen px-10 py-6 bg-background text-foreground">
             {/* 🔍 Search */}
@@ -42,19 +72,23 @@ function RouteComponent() {
                 <input
                     type="text"
                     placeholder="Search anime..."
+                    onChange={(e) => setSearch(e.target.value)}
+                    value={search}
                     className="w-75 border border-white/10 bg-white/5 px-4 py-2 rounded-lg outline-none focus:ring-2 focus:ring-accent transition"
                 />
-                <button className="bg-accent px-5 py-2 rounded-lg font-medium hover:bg-accent/80 transition">
-                    Search
-                </button>
             </div>
 
-            {/* 🎭 Genre filter */}
+            {/* 🎯 Category */}
             <div className="flex flex-wrap gap-3 mt-8">
                 {genre.map((g, index) => (
                     <button
                         key={index}
-                        className="px-4 py-1.5 rounded-full border border-white/10 bg-white/5 text-sm hover:bg-accent hover:text-white transition">
+                        onClick={() => setSelectedCategory(g)}
+                        className={`px-4 py-1.5 rounded-full border text-sm transition ${
+                            selectCategory === g
+                                ? "bg-accent text-white border-accent"
+                                : "border-white/10 bg-white/5 hover:bg-accent hover:text-white"
+                        }`}>
                         {g}
                     </button>
                 ))}
@@ -62,28 +96,52 @@ function RouteComponent() {
 
             {/* 🎬 Grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-5 mt-10">
-                {Array.from({length: 14}).map((_, i) => (
-                    <div
-                        key={i}
-                        className="group relative bg-white/5 rounded-xl overflow-hidden hover:scale-105 transition">
-                        {/* Thumbnail */}
-                        <div className="h-40 bg-muted flex items-center justify-center text-sm">
-                            Img
-                        </div>
+                {isFetching && (
+                    <p className="col-span-full text-center text-muted-foreground">
+                        Loading...
+                    </p>
+                )}
 
-                        {/* Overlay */}
-                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-                            <button className="bg-accent px-3 py-1 rounded text-sm">
-                                ▶ Watch
-                            </button>
-                        </div>
+                {data?.data?.length === 0 && (
+                    <p className="col-span-full text-center text-muted-foreground">
+                        No bookmarks found.
+                    </p>
+                )}
 
-                        {/* Title */}
-                        <div className="p-2 text-sm truncate">
-                            Anime Title {i + 1}
+                {data &&
+                    data?.map((anime: AnimeDetails) => (
+                        <div
+                            key={anime._id}
+                            onClick={() =>
+                                navigate({to: `/anime/watch/${anime.animeId}`})
+                            }
+                            className="group cursor-pointer">
+                            {/* Card */}
+                            <div className="relative overflow-hidden rounded-xl bg-white/5 hover:scale-105 transition">
+                                {/* Image */}
+                                <img
+                                    src={anime.imagePath}
+                                    className="w-full h-60 object-cover"
+                                />
+
+                                {/* Overlay */}
+                                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                                    <span className="bg-accent px-4 py-2 rounded text-sm font-medium flex flex-row items-center">
+                                        <PlayIcon className="w-4 h-4 mr-2" />
+                                        <span>Watch</span>
+                                    </span>
+                                </div>
+
+                                {/* Optional gradient bottom */}
+                                <div className="absolute bottom-0 left-0 right-0 h-16 bg-linear-to-t from-black/70 to-transparent" />
+                            </div>
+
+                            {/* Title */}
+                            <h3 className="text-sm mt-2 line-clamp-2 text-foreground/90 group-hover:text-foreground transition">
+                                {anime.name}
+                            </h3>
                         </div>
-                    </div>
-                ))}
+                    ))}
             </div>
 
             {/* 📄 Pagination */}
@@ -97,21 +155,31 @@ function RouteComponent() {
                         />
                     </PaginationItem>
 
-                    {[1, 2, 3].map((p) => (
-                        <PaginationItem key={p}>
-                            <PaginationLink
-                                isActive={p === page}
-                                onClick={() => setPage(p)}
-                                className="cursor-pointer">
-                                {p}
-                            </PaginationLink>
-                        </PaginationItem>
-                    ))}
+                    {Array.from({
+                        length: data?.pagination?.totalPages || 1,
+                    }).map((_, i) => {
+                        const p = i + 1
+                        return (
+                            <PaginationItem key={p}>
+                                <PaginationLink
+                                    isActive={p === page}
+                                    onClick={() => setPage(p)}
+                                    className="cursor-pointer">
+                                    {p}
+                                </PaginationLink>
+                            </PaginationItem>
+                        )
+                    })}
 
                     <PaginationItem>
                         <PaginationNext
                             onClick={() =>
-                                setPage((prev) => Math.min(prev + 1, 3))
+                                setPage((prev) =>
+                                    Math.min(
+                                        prev + 1,
+                                        data?.pagination?.totalPages || 1,
+                                    ),
+                                )
                             }
                         />
                     </PaginationItem>

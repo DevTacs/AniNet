@@ -1,6 +1,7 @@
 import express from "express"
 import {
     checkBookmarkAsync,
+    getAnimeBookmarksAsync,
     getAnimeByCategoryAsync,
     getAnimeByIdAsync,
     getEpisodesByIdAsync,
@@ -17,6 +18,7 @@ router
     .route("/bookmark")
     .get(isAuthenticated, checkBookmarkAsync)
     .put(isAuthenticated, toggleAnimeBookmarkAsync)
+router.get("/bookmarks", isAuthenticated, getAnimeBookmarksAsync)
 
 router.get("/:id/episodes", getEpisodesByIdAsync)
 router.get("/:id", getAnimeByIdAsync)

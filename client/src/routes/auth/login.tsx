@@ -42,7 +42,7 @@ function RouteComponent() {
     const handleOnSubmit = async (data: LoginSchemaInfer) => {
         try {
             await mutateAsync(data)
-            navigate({to: "/anime/featured-anime"})
+            navigate({to: "/anime/browse"})
         } catch (error) {
             console.log(error)
             throw error
@@ -122,7 +122,7 @@ function RouteComponent() {
 
                 <CardFooter className="flex flex-col gap-3">
                     <Button
-                        onClick={() => navigate({to: "/anime/featured-anime"})}
+                        onClick={() => navigate({to: "/anime/browse"})}
                         variant="outline"
                         className="w-full">
                         Login as Guest

@@ -74,8 +74,22 @@ export const checkBookmarkAsync = async (animeId: number) => {
 
 export const toggleAnimeBookmarkAsync = async (animeId: number) => {
     try {
-        console.log("first")
         await api.put("/anime/bookmark", {animeId})
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
+export const getAnimeBookmarksAsync = async (
+    search: string,
+    page: number,
+    category: string,
+) => {
+    try {
+        const {data} = await api.get(
+            `/anime/bookmarks?search=${search}&page=${page}&category=${category}&limit=10`,
+        )
+        return data
     } catch (error) {
         console.log(error)
         throw error

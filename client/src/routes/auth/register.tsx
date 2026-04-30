@@ -47,7 +47,7 @@ function RouteComponent() {
     const handleRegister = async (data: RegisterSchemaInfer) => {
         try {
             await mutateAsync(data)
-            navigate({to: "/anime/featured-anime"})
+            navigate({to: "/anime/browse"})
         } catch (error) {
             console.log(error)
         }

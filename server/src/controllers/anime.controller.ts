@@ -60,7 +60,7 @@ export const getAnimeByCategoryAsync = async (req: Request, res: Response) => {
         const genre = req.query.genre as string
         const page = Number(req.query.page)
 
-        const anime = await findByGenre(genre)
+        const anime = await findByGenre(genre, page)
         res.json(anime)
     } catch (error) {
         console.log(error)
@@ -92,15 +92,15 @@ export const toggleAnimeBookmarkAsync = async (req: Request, res: Response) => {
         const exist = await Bookmark.where("animeId", animeId)
         if (exist.length == 0) {
             const anime = await getInfo(animeId)
-
             if (!anime)
                 return res.status(404).json({message: "Anime not found"})
 
             await Bookmark.create({
                 user: user.id,
                 animeId,
-                Name: anime.Name,
-                ImagePath: anime.ImagePath,
+                name: anime.Name,
+                imagePath: anime.ImagePath,
+                genre: anime.Genres,
             })
 
             return res.json({message: "Bookmark added successfully"})
@@ -110,6 +110,37 @@ export const toggleAnimeBookmarkAsync = async (req: Request, res: Response) => {
         await Bookmark.deleteOne({user: objectId, animeId})
 
         res.json({message: "Bookmark removed successfully"})
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({message: "Internal server error"})
+    }
+}
+
+export const getAnimeBookmarksAsync = async (req: Request, res: Response) => {
+    try {
+        const user = req.user as JwtPayload
+        const {page = 1, limit = 10, search = "", category = ""} = req.query
+        const objectId = new mongoose.Types.ObjectId(user.id)
+
+        const query: any = {
+            user: objectId,
+        }
+
+        if (search) {
+            query.Name = {$regex: search, $options: "i"} // case-insensitive
+        }
+
+        if (category == "all") {
+            query.genre = {$exists: true}
+        } else if (category) {
+            query.genre = {$regex: category, $options: "i"}
+        }
+
+        const bookmarks = await Bookmark.find(query)
+            .skip((Number(page) - 1) * Number(limit))
+            .limit(Number(limit))
+
+        res.json(bookmarks)
     } catch (error) {
         console.log(error)
         res.status(500).json({message: "Internal server error"})

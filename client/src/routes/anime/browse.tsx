@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/pagination"
 import {PackageOpen, Search, X} from "lucide-react"
 
-export const Route = createFileRoute("/anime/featured-anime")({
+export const Route = createFileRoute("/anime/browse")({
     component: RouteComponent,
 })
 

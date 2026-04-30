@@ -10,12 +10,16 @@ const bookmarkSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    Name: {
+    name: {
         type: String,
         required: true,
     },
-    ImagePath: {
+    imagePath: {
         type: String,
+        required: true,
+    },
+    genre: {
+        type: [String],
         required: true,
     },
 })
