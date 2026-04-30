@@ -4,6 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
+        "build": "tsc",
         "dev": "node --env-file=.env --import tsx --watch src/server.ts"
     },
     "keywords": [],
