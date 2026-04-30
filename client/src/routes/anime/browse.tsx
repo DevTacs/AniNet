@@ -142,63 +142,60 @@ function RouteComponent() {
                     )}
                 </>
             )}
-            {/* PAGINATION */}
-            {data.length > 0 && (
-                <div className="mt-10 flex justify-center">
-                    <div className="w-full overflow-x-auto whitespace-nowrap">
-                        <Pagination>
-                            <PaginationContent className="flex flex-nowrap">
-                                {/* Prev */}
-                                <PaginationItem>
-                                    <PaginationPrevious
+            <div className="mt-10 flex justify-center">
+                <div className="max-w-full overflow-x-auto">
+                    <Pagination>
+                        <PaginationContent className="flex w-max flex-nowrap gap-1">
+                            {/* Prev */}
+                            <PaginationItem>
+                                <PaginationPrevious
+                                    className={
+                                        page === 1
+                                            ? "opacity-50 pointer-events-none"
+                                            : "cursor-pointer"
+                                    }
+                                    onClick={() =>
+                                        setPage((p) => Math.max(p - 1, 1))
+                                    }
+                                />
+                            </PaginationItem>
+
+                            {/* Pages */}
+                            {pages.map((p) => (
+                                <PaginationItem key={p}>
+                                    <PaginationLink
+                                        isActive={p === page}
+                                        onClick={() => setPage(p)}
                                         className={
-                                            page === 1
-                                                ? "opacity-50 pointer-events-none"
+                                            p === page
+                                                ? "bg-accent text-white"
                                                 : "cursor-pointer"
-                                        }
-                                        onClick={() =>
-                                            setPage((p) => Math.max(p - 1, 1))
-                                        }
-                                    />
+                                        }>
+                                        {p}
+                                    </PaginationLink>
                                 </PaginationItem>
+                            ))}
 
-                                {/* Pages */}
-                                {pages.map((p) => (
-                                    <PaginationItem key={p}>
-                                        <PaginationLink
-                                            isActive={p === page}
-                                            onClick={() => setPage(p)}
-                                            className={
-                                                p === page
-                                                    ? "bg-accent text-white"
-                                                    : "cursor-pointer"
-                                            }>
-                                            {p}
-                                        </PaginationLink>
-                                    </PaginationItem>
-                                ))}
+                            {/* Next */}
+                            <PaginationItem>
+                                <PaginationNext
+                                    onClick={() => {
+                                        const nextPage = page + 1
 
-                                {/* Next */}
-                                <PaginationItem>
-                                    <PaginationNext
-                                        onClick={() => {
-                                            const nextPage = page + 1
+                                        setPage(nextPage)
 
-                                            setPage(nextPage)
-
-                                            setPages((prev) =>
-                                                prev.includes(nextPage)
-                                                    ? prev
-                                                    : [...prev, nextPage],
-                                            )
-                                        }}
-                                    />
-                                </PaginationItem>
-                            </PaginationContent>
-                        </Pagination>
-                    </div>
+                                        setPages((prev) =>
+                                            prev.includes(nextPage)
+                                                ? prev
+                                                : [...prev, nextPage],
+                                        )
+                                    }}
+                                />
+                            </PaginationItem>
+                        </PaginationContent>
+                    </Pagination>
                 </div>
-            )}
+            </div>
         </div>
     )
 }
