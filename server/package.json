@@ -5,6 +5,7 @@
     "main": "index.js",
     "scripts": {
         "build": "tsc",
+        "start": "node dist/server.js",
         "dev": "node --env-file=.env --import tsx --watch src/server.ts"
     },
     "keywords": [],

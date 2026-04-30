@@ -20,7 +20,7 @@ export const googleCallbackAsync = async (req: Request, res: Response) => {
     res.cookie("authToken", token, {
         httpOnly: true, // 👈 cannot be accessed by JS
         secure: process.env.ENVIRONMENT === "production", // true in production (HTTPS)
-        sameSite: "lax",
+        sameSite: "none",
         maxAge: 3600000, // 1 hour
     })
     res.redirect(`${process.env.CLIENT_URL}/anime/browse`)
