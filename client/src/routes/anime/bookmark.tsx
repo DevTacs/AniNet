@@ -145,46 +145,51 @@ function RouteComponent() {
             </div>
 
             {/* 📄 Pagination */}
-            <Pagination className="mt-12 flex justify-center">
-                <PaginationContent>
-                    <PaginationItem>
-                        <PaginationPrevious
-                            onClick={() =>
-                                setPage((prev) => Math.max(prev - 1, 1))
-                            }
-                        />
-                    </PaginationItem>
-
-                    {Array.from({
-                        length: data?.pagination?.totalPages || 1,
-                    }).map((_, i) => {
-                        const p = i + 1
-                        return (
-                            <PaginationItem key={p}>
-                                <PaginationLink
-                                    isActive={p === page}
-                                    onClick={() => setPage(p)}
-                                    className="cursor-pointer">
-                                    {p}
-                                </PaginationLink>
+            <div className="mt-10 flex justify-center">
+                <div className="w-full max-w-full overflow-x-auto">
+                    <Pagination className="flex w-max gap-2 px-2 whitespace-nowrap">
+                        <PaginationContent>
+                            <PaginationItem>
+                                <PaginationPrevious
+                                    onClick={() =>
+                                        setPage((prev) => Math.max(prev - 1, 1))
+                                    }
+                                />
                             </PaginationItem>
-                        )
-                    })}
 
-                    <PaginationItem>
-                        <PaginationNext
-                            onClick={() =>
-                                setPage((prev) =>
-                                    Math.min(
-                                        prev + 1,
-                                        data?.pagination?.totalPages || 1,
-                                    ),
+                            {Array.from({
+                                length: data?.pagination?.totalPages || 1,
+                            }).map((_, i) => {
+                                const p = i + 1
+                                return (
+                                    <PaginationItem key={p}>
+                                        <PaginationLink
+                                            isActive={p === page}
+                                            onClick={() => setPage(p)}
+                                            className="cursor-pointer">
+                                            {p}
+                                        </PaginationLink>
+                                    </PaginationItem>
                                 )
-                            }
-                        />
-                    </PaginationItem>
-                </PaginationContent>
-            </Pagination>
+                            })}
+
+                            <PaginationItem>
+                                <PaginationNext
+                                    onClick={() =>
+                                        setPage((prev) =>
+                                            Math.min(
+                                                prev + 1,
+                                                data?.pagination?.totalPages ||
+                                                    1,
+                                            ),
+                                        )
+                                    }
+                                />
+                            </PaginationItem>
+                        </PaginationContent>
+                    </Pagination>
+                </div>
+            </div>
         </div>
     )
 }

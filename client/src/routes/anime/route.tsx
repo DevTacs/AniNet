@@ -61,7 +61,7 @@ function RootComponent() {
                         <div className="flex items-center gap-4 ml-6">
                             {!data && (
                                 <button
-                                    className="bg-accent px-5 py-2 rounded-lg text-sm font-medium hover:bg-accent/80 transition"
+                                    className="bg-accent px-5 py-2 rounded-lg text-sm text-foreground font-medium hover:bg-accent/80 transition"
                                     onClick={handleOnLoginClick}>
                                     Login
                                 </button>
