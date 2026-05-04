@@ -19,8 +19,15 @@ export const Route = createRootRoute({
     },
 })
 
+type AuthUser = {
+    id: string
+    username: string
+    email: string
+    avatar: string
+}
+
 function RootComponent() {
-    const data = Route.useLoaderData()
+    const data: AuthUser = Route.useLoaderData()
     const navigate = useNavigate()
     const [open, setOpen] = useState(false)
     const [openCall, setOpenCall] = useState(false)
@@ -128,7 +135,9 @@ function RootComponent() {
 
             <main className="bg-background text-foreground min-h-screen relative">
                 <Outlet />
-                {openCall && <VideoCall />}
+                {openCall && (
+                    <VideoCall username={data.username} email={data.email} />
+                )}
             </main>
         </>
     )

@@ -12,6 +12,7 @@ import {useMutation} from "@tanstack/react-query"
 import {useNavigate} from "@tanstack/react-router"
 
 type AuthUser = {
+    id: string
     username: string
     email: string
     avatar: string

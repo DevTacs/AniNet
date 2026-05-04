@@ -95,3 +95,15 @@ export const getAnimeBookmarksAsync = async (
         throw error
     }
 }
+
+export const getInviteCodeAsync = async (): Promise<string> => {
+    try {
+        const {
+            data: {code},
+        } = await api.get("/anime/watch-together/room")
+        return code
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}

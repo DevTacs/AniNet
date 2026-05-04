@@ -154,7 +154,6 @@ export const generateWatchTogetherRoomAsync = async (
 ) => {
     try {
         const code = generateInviteCode(5)
-
         res.json({code})
     } catch (error) {
         console.log(error)

@@ -1,5 +1,10 @@
 import {customAlphabet} from "nanoid"
 
 export function generateInviteCode(length: number) {
-    return customAlphabet("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", length)
+    const generate = customAlphabet(
+        "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+        length,
+    )
+
+    return generate()
 }
