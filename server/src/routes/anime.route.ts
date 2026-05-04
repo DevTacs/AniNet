@@ -1,6 +1,7 @@
 import express from "express"
 import {
     checkBookmarkAsync,
+    generateWatchTogetherRoomAsync,
     getAnimeBookmarksAsync,
     getAnimeByCategoryAsync,
     getAnimeByIdAsync,
@@ -12,6 +13,11 @@ import {isAuthenticated} from "../middlewares/auth.middleware.js"
 
 const router = express.Router()
 
+router.get(
+    "/watch-together/room",
+    isAuthenticated,
+    generateWatchTogetherRoomAsync,
+)
 router.get("/featured", getTopRatedAnimeAsync)
 router.get("/browse", getAnimeByCategoryAsync)
 router
