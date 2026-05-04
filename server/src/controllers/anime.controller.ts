@@ -9,6 +9,7 @@ import {
 import Bookmark from "../models/bookmarks.model.js"
 import mongoose from "mongoose"
 import {JwtPayload} from "../types/auth.type.js"
+import {generateInviteCode} from "../utils/invite-code.js"
 
 export const getTopRatedAnimeAsync = async (req: Request, res: Response) => {
     try {
@@ -141,6 +142,20 @@ export const getAnimeBookmarksAsync = async (req: Request, res: Response) => {
             .limit(Number(limit))
 
         res.json(bookmarks)
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({message: "Internal server error"})
+    }
+}
+
+export const generateWatchTogetherRoomAsync = async (
+    req: Request,
+    res: Response,
+) => {
+    try {
+        const code = generateInviteCode(5)
+
+        res.json({code})
     } catch (error) {
         console.log(error)
         res.status(500).json({message: "Internal server error"})
