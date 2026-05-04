@@ -127,7 +127,7 @@ export const logoutUserAsync = async (req: Request, res: Response) => {
         res.clearCookie("authToken", {
             httpOnly: true, // 👈 cannot be accessed by JS
             secure: process.env.ENVIRONMENT === "production", // true in production (HTTPS)
-            sameSite: "lax",
+            sameSite: "none",
             maxAge: 3600000, // 1 hour
         })
 
