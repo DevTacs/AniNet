@@ -86,24 +86,24 @@ function RouteComponent() {
                             label="Username"
                             type="string"
                             placeholder="Enter your username"
-                            register={register}
-                            errors={errors}
+                            register={register("username")}
+                            error={errors.username}
                         />
                         <AuthInput
                             name="email"
                             label="Email"
                             type="email"
                             placeholder="Enter your email"
-                            register={register}
-                            errors={errors}
+                            register={register("email")}
+                            error={errors.email}
                         />
                         <AuthInput
                             name="password"
                             label="Password"
                             type="password"
                             placeholder="Enter your password"
-                            register={register}
-                            errors={errors}
+                            register={register("password")}
+                            error={errors.password}
                         />
 
                         <Button className="w-full bg-accent hover:bg-accent/80 text-white">
