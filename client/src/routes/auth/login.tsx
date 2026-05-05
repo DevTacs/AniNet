@@ -18,6 +18,8 @@ import {useMutation} from "@tanstack/react-query"
 import {loginUserAsync} from "@/services/auth.service"
 import GoogleAuth from "@/components/auth/google-auth"
 import AuthInput from "@/components/auth/auth-input"
+import Divider from "@/components/auth/dividers"
+import Header from "@/components/auth/header"
 
 export const Route = createFileRoute("/auth/login")({
     component: RouteComponent,
@@ -53,29 +55,14 @@ function RouteComponent() {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-background text-foreground">
-            {/* Optional background glow */}
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(229,9,20,0.15),transparent_60%)]" />
-
             <Card className="relative w-full max-w-sm bg-white/5 border border-white/10 backdrop-blur-xl shadow-xl rounded-2xl">
-                <CardHeader className="space-y-1">
-                    <CardTitle className="text-xl font-semibold">
-                        Welcome back
-                    </CardTitle>
-
-                    <CardDescription className="text-foreground/60">
-                        Join to start watching anime
-                    </CardDescription>
-
-                    <CardAction>
-                        <Link
-                            className="text-accent hover:text-accent/80"
-                            to="/auth/register">
-                            {" "}
-                            Sign Up
-                        </Link>
-                    </CardAction>
-                </CardHeader>
-
+                <Header
+                    title="Welcome back"
+                    description="Join to start watching anime"
+                    label="Register"
+                    path="/auth/register"
+                />
                 <CardContent>
                     <form
                         className="space-y-5"
@@ -88,7 +75,6 @@ function RouteComponent() {
                             register={register("username")}
                             error={errors.username}
                         />
-
                         <AuthInput
                             name="password"
                             label="Password"
@@ -102,7 +88,6 @@ function RouteComponent() {
                         </Button>
                     </form>
                 </CardContent>
-
                 <CardFooter className="flex flex-col gap-3">
                     <Button
                         onClick={() => navigate({to: "/anime/browse"})}
@@ -110,14 +95,7 @@ function RouteComponent() {
                         className="w-full">
                         Login as Guest
                     </Button>
-
-                    {/* Divider */}
-                    <div className="flex items-center gap-2 w-full">
-                        <div className="flex-1 h-px bg-white/10" />
-                        <span className="text-xs text-foreground/50">OR</span>
-                        <div className="flex-1 h-px bg-white/10" />
-                    </div>
-
+                    <Divider />
                     <GoogleAuth />
                 </CardFooter>
             </Card>
