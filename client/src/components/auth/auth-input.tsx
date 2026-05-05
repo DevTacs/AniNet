@@ -1,6 +1,6 @@
 import {Label} from "../ui/label"
 import {Input} from "../ui/input"
-import type {UseFormRegister, FieldErrors} from "react-hook-form"
+import type {UseFormRegisterReturn, FieldError} from "react-hook-form"
 
 type AuthForm = {
     username: string
@@ -13,8 +13,8 @@ type InputProps = {
     label: string
     type: string
     placeholder: string
-    register: UseFormRegister<AuthForm>
-    errors: FieldErrors<AuthForm>
+    register: UseFormRegisterReturn
+    error?: FieldError
 }
 
 export default function AuthInput({
@@ -23,7 +23,7 @@ export default function AuthInput({
     type,
     placeholder,
     register,
-    errors,
+    error,
 }: InputProps) {
     return (
         <div className="space-y-2">
@@ -33,12 +33,10 @@ export default function AuthInput({
                 type={type}
                 placeholder={placeholder}
                 className="bg-white/5 border-white/10 focus:ring-2 focus:ring-accent"
-                {...register(name)}
+                {...register}
             />
-            {errors[name] && (
-                <p className="text-red-500 text-sm mt-1">
-                    {errors[name].message}
-                </p>
+            {error && (
+                <p className="text-red-500 text-sm mt-1">{error.message}</p>
             )}
         </div>
     )
