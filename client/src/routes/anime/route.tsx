@@ -1,4 +1,7 @@
 import UserAvatarMenu from "@/components/avatar-menu"
+import DesktopLayout from "@/components/header/desktop-layout"
+import MobileLayout from "@/components/header/mobile-layout"
+import Navigation from "@/components/header/navigation"
 import {Button} from "@/components/ui/button"
 import VideoCall from "@/components/watch-together/video-call"
 import {api} from "@/configs/axios.config"
@@ -41,48 +44,12 @@ function RootComponent() {
                     <span className="text-2xl font-bold tracking-wide text-foreground">
                         Ani<span className="text-accent">Net</span>
                     </span>
-                    <nav className="hidden md:flex items-center gap-8">
-                        <Link
-                            to="/anime/browse"
-                            className="text-sm text-foreground/70 hover:text-foreground transition"
-                            activeProps={{
-                                className:
-                                    "text-foreground font-semibold border-b-2 border-accent pb-1",
-                            }}>
-                            Browse
-                        </Link>
-
-                        {data && (
-                            <Link
-                                to="/anime/bookmark"
-                                className="text-sm text-foreground/70 hover:text-foreground transition"
-                                activeProps={{
-                                    className:
-                                        "text-foreground font-semibold border-b-2 border-accent pb-1",
-                                }}>
-                                Bookmarks
-                            </Link>
-                        )}
-                        {data && (
-                            <Button
-                                onClick={() => setOpenCall(!openCall)}
-                                className="text-sm bg-accent text-foreground hover:bg-accent/80 transition">
-                                Watch together
-                            </Button>
-                        )}
-
-                        <div className="flex items-center gap-4 ml-6">
-                            {!data && (
-                                <button
-                                    className="bg-accent px-5 py-2 rounded-lg text-sm text-foreground font-medium hover:bg-accent/80 transition"
-                                    onClick={handleOnLoginClick}>
-                                    Login
-                                </button>
-                            )}
-
-                            {data && <UserAvatarMenu data={data} />}
-                        </div>
-                    </nav>
+                    <DesktopLayout
+                        data={data}
+                        handleOnLoginClick={handleOnLoginClick}
+                        openCall={openCall}
+                        setOpenCall={setOpenCall}
+                    />
 
                     <button
                         className="md:hidden"
@@ -96,40 +63,13 @@ function RootComponent() {
                 </div>
 
                 {open && (
-                    <div className="md:hidden px-4 pb-4 space-y-3 border-t border-white/10">
-                        <Link
-                            to="/anime/browse"
-                            onClick={() => setOpen(false)}
-                            className="block text-sm py-2 text-foreground/70 hover:text-foreground">
-                            Browse
-                        </Link>
-
-                        {data && (
-                            <Link
-                                to="/anime/bookmark"
-                                onClick={() => setOpen(false)}
-                                className="block text-sm py-2 text-foreground/70 hover:text-foreground">
-                                Bookmarks
-                            </Link>
-                        )}
-
-                        {!data && (
-                            <button
-                                className="w-full bg-accent py-2 rounded-lg text-sm font-medium"
-                                onClick={() => {
-                                    setOpen(false)
-                                    handleOnLoginClick()
-                                }}>
-                                Login
-                            </button>
-                        )}
-
-                        {data && (
-                            <div className="pt-2">
-                                <UserAvatarMenu data={data} />
-                            </div>
-                        )}
-                    </div>
+                    <MobileLayout
+                        data={data}
+                        setOpen={setOpen}
+                        handleOnLoginClick={handleOnLoginClick}
+                        openCall={openCall}
+                        setOpenCall={setOpenCall}
+                    />
                 )}
             </header>
 

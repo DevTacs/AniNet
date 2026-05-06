@@ -20,30 +20,14 @@ import AuthInput from "@/components/auth/auth-input"
 import GoogleAuth from "@/components/auth/google-auth"
 import Divider from "@/components/auth/dividers"
 import Header from "@/components/auth/header"
+import {useRegister} from "@/hooks/auth/register.hook"
 
 export const Route = createFileRoute("/auth/register")({
     component: RouteComponent,
 })
 function RouteComponent() {
     const navigate = useNavigate()
-    const {
-        register,
-        handleSubmit,
-        formState: {errors},
-    } = useForm<RegisterSchemaInfer>({
-        resolver: zodResolver(registerSchema),
-        defaultValues: {
-            username: "",
-            email: "",
-            password: "",
-        },
-    })
-
-    const {mutateAsync} = useMutation({
-        mutationKey: ["register"],
-        mutationFn: async (data: RegisterSchemaInfer) =>
-            registerUserAsync(data),
-    })
+    const {register, handleSubmit, errors, mutateAsync} = useRegister()
 
     const handleRegister = async (data: RegisterSchemaInfer) => {
         try {
