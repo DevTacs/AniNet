@@ -48,7 +48,7 @@ export const loginUserAsync = async (req: Request, res: Response) => {
     try {
         const user = req.user as AuthUser
 
-        if (!user) return res.status(401).json({message: "User not found"})
+        if (!user) return res.status(401).json({message: "Invalid credentials"})
 
         const payload: JwtPayload = {
             id: user.id,
