@@ -34,11 +34,10 @@ export const getAnimeByIdAsync = async (
 ) => {
     try {
         const id = Number(req.params.id)
-        const data = await getInfo(id)
-        if (data) {
+        const data: any = await getInfo(id)
+        if (data == "err") {
             return res.status(404).json({message: "Anime not found"})
         }
-        console.log("ada " + data)
         res.json(data)
     } catch (error) {
         console.log(error)
@@ -52,9 +51,9 @@ export const getEpisodesByIdAsync = async (
 ) => {
     try {
         const id = Number(req.params.id)
-        const anime = await getInfo(id)
+        const anime: any = await getInfo(id)
 
-        if (!anime) {
+        if (anime == "err") {
             return res.status(404).json({message: "Anime not found"})
         }
 
