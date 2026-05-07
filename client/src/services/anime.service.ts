@@ -21,6 +21,7 @@ export const getFeaturedAnimeAsync = async (
 export const getAnimeByIdAsync = async (id: number): Promise<AnimeInfo> => {
     try {
         const {data} = await api.get(`/anime/${id}`)
+        console.log(data)
         return animeResponseMap(data)
     } catch (error) {
         console.log(error)

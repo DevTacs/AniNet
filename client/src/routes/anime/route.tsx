@@ -1,16 +1,8 @@
-import UserAvatarMenu from "@/components/avatar-menu"
 import DesktopLayout from "@/components/header/desktop-layout"
 import MobileLayout from "@/components/header/mobile-layout"
-import Navigation from "@/components/header/navigation"
-import {Button} from "@/components/ui/button"
 import VideoCall from "@/components/watch-together/video-call"
 import {api} from "@/configs/axios.config"
-import {
-    Link,
-    Outlet,
-    createRootRoute,
-    useNavigate,
-} from "@tanstack/react-router"
+import {Outlet, createRootRoute, useNavigate} from "@tanstack/react-router"
 import {Menu, X} from "lucide-react"
 import {useState} from "react"
 

@@ -35,6 +35,10 @@ export const getAnimeByIdAsync = async (
     try {
         const id = Number(req.params.id)
         const data = await getInfo(id)
+        if (data) {
+            return res.status(404).json({message: "Anime not found"})
+        }
+        console.log("ada " + data)
         res.json(data)
     } catch (error) {
         console.log(error)
@@ -48,6 +52,12 @@ export const getEpisodesByIdAsync = async (
 ) => {
     try {
         const id = Number(req.params.id)
+        const anime = await getInfo(id)
+
+        if (!anime) {
+            return res.status(404).json({message: "Anime not found"})
+        }
+
         const episodes = await getStreamingLinks(id)
         res.json(episodes)
     } catch (error) {
@@ -75,10 +85,16 @@ export const checkBookmarkAsync = async (req: Request, res: Response) => {
         const objectId = new mongoose.Types.ObjectId(user.id)
         const animeId = Number(req.query.animeId)
 
+        if (isNaN(animeId)) {
+            return res.status(400).json({
+                message: "Invalid animeId",
+            })
+        }
+
         const exists = await Bookmark.exists({user: objectId, animeId})
         if (!exists) return res.json({exists: false})
 
-        res.json({exists})
+        res.json({exists: true})
     } catch (error) {
         console.log(error)
         res.status(500).json({message: "Internal server error"})
@@ -90,7 +106,7 @@ export const toggleAnimeBookmarkAsync = async (req: Request, res: Response) => {
         const user = req.user as JwtPayload
         const {animeId} = req.body
 
-        const exist = await Bookmark.where("animeId", animeId)
+        const exist = await Bookmark.where({userId: user.id, animeId})
         if (exist.length == 0) {
             const anime = await getInfo(animeId)
             if (!anime)
