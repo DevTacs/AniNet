@@ -2,7 +2,7 @@ import {PackageOpen} from "lucide-react"
 
 export default function EmptyState() {
     return (
-        <div className="mt-16 flex flex-col items-center justify-center text-center">
+        <div className="min-h-screen flex flex-col items-center justify-center">
             <div className="text-4xl mb-3">
                 <PackageOpen />
             </div>
