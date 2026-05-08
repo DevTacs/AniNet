@@ -1,3 +1,5 @@
+import CategoryBookmark from "@/components/bookmark/category-bookmark"
+import SearchBookmark from "@/components/bookmark/search-bookmark"
 import {
     Pagination,
     PaginationContent,
@@ -7,12 +9,11 @@ import {
     PaginationPrevious,
 } from "@/components/ui/pagination"
 import {api} from "@/configs/axios.config"
-import {getAnimeBookmarksAsync} from "@/services/anime.service"
-import {useQuery} from "@tanstack/react-query"
+import {useAnimeBookmark} from "@/hooks/bookmark/bookmark.hook"
+import {useSearchBookmark} from "@/hooks/bookmark/search-bookmark-hook"
 import {createFileRoute, redirect, useNavigate} from "@tanstack/react-router"
 import {PlayIcon} from "lucide-react"
-import {useEffect, useState} from "react"
-import {useDebounce} from "use-debounce"
+import {useState} from "react"
 
 type AnimeDetails = {
     _id: string
@@ -51,48 +52,34 @@ function RouteComponent() {
         "magic",
     ]
 
-    const [search, setSearch] = useState("")
-    const [debounceSearch] = useDebounce(search, 500)
-    const [selectCategory, setSelectedCategory] = useState(genre[0])
-
-    const {data, isFetching} = useQuery({
-        queryKey: ["bookmarks", page, debounceSearch, selectCategory],
-        queryFn: () =>
-            getAnimeBookmarksAsync(debounceSearch, page, selectCategory),
+    const {
+        search,
+        setSearch,
+        debounceSearch,
+        selectCategory,
+        setSelectedCategory,
+    } = useSearchBookmark({
+        genre: genre[0],
+        setPage,
     })
 
-    useEffect(() => {
-        setPage(1)
-    }, [debounceSearch, selectCategory])
+    const {data, isFetching} = useAnimeBookmark({
+        page,
+        debounceSearch,
+        selectCategory,
+    })
 
     return (
         <div className="min-h-screen px-10 py-6 bg-background text-foreground">
             {/* 🔍 Search */}
-            <div className="flex justify-end gap-3">
-                <input
-                    type="text"
-                    placeholder="Search anime..."
-                    onChange={(e) => setSearch(e.target.value)}
-                    value={search}
-                    className="w-75 border border-white/10 bg-white/5 px-4 py-2 rounded-lg outline-none focus:ring-2 focus:ring-accent transition"
-                />
-            </div>
+            <SearchBookmark search={search} setSearch={setSearch} />
 
             {/* 🎯 Category */}
-            <div className="flex flex-wrap gap-3 mt-8">
-                {genre.map((g, index) => (
-                    <button
-                        key={index}
-                        onClick={() => setSelectedCategory(g)}
-                        className={`px-4 py-1.5 rounded-full border text-sm transition ${
-                            selectCategory === g
-                                ? "bg-accent text-white border-accent"
-                                : "border-white/10 bg-white/5 hover:bg-accent hover:text-white"
-                        }`}>
-                        {g}
-                    </button>
-                ))}
-            </div>
+            <CategoryBookmark
+                genre={genre}
+                selectCategory={selectCategory}
+                setSelectedCategory={setSelectedCategory}
+            />
 
             {/* 🎬 Grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-5 mt-10">
