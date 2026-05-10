@@ -105,7 +105,7 @@ export const toggleAnimeBookmarkAsync = async (req: Request, res: Response) => {
         const user = req.user as JwtPayload
         const {animeId} = req.body
 
-        const exist = await Bookmark.where({userId: user.id, animeId})
+        const exist = await Bookmark.where({user: user.id, animeId})
         if (exist.length == 0) {
             const anime = await getInfo(animeId)
             if (!anime)
